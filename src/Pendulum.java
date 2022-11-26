@@ -1,8 +1,8 @@
 import lombok.Data;
 import processing.core.PApplet;
 import processing.core.PVector;
+import static processing.core.PApplet.*;
 
-import static java.lang.Math.*;
 
 @Data
 public class Pendulum {
@@ -27,6 +27,19 @@ public class Pendulum {
         this.velocity = velocity;
         this.theta = theta;
         this.p  = p;
+    }
+
+    public Pendulum(PVector mouseCoords, PApplet p) {
+        float r = sqrt(pow(mouseCoords.x, 2) + pow(mouseCoords.y, 2));
+        float theta = atan(mouseCoords.y / mouseCoords.x);
+        if (mouseCoords.x < 0) {
+            theta += PI;
+        }
+        this.p = p;
+        this.r = r;
+        this.theta = theta;
+        this.velocity = 0;
+        println("Creating pendulum at r: " + r + " theta: " + theta);
     }
 
     public float acceleration() {

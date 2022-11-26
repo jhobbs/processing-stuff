@@ -9,32 +9,16 @@ public class ProcessingTest extends PApplet {
     private final int width = boxSize;
     private final int height = boxSize;
 
-    private final int maxX = width / 2;
-    private final int maxY = height / 2;
-
-    private final int spacing = boxSize / 20;
-
     public void settings(){
         size(width, height);
     }
 
     private void drawGrid() {
+        int maxY = height / 2;
         line(0, maxY, 0, -maxY);
+        int maxX = width / 2;
         line(-maxX, 0, maxX, 0);
         stroke(126);
-    }
-
-    private void drawVectorsPolar() {
-        float angularSpacing = TWO_PI * ((float)spacing/boxSize);
-        for (int r = maxY - spacing; r > 0; r -= spacing) {
-            for (float theta = 0; theta < TWO_PI; theta += angularSpacing) {
-                //println("theta: " + theta + " r: " + r);
-                PVector point = Util.p2c(r, theta);
-                PVector endpoint = Util.p2c(r, theta + (float)spacing/4);
-                point(point.x, point.y);
-                line(point.x, point.y, endpoint.x, endpoint.y);
-            }
-        }
     }
 
     public void setup() {
@@ -45,7 +29,7 @@ public class ProcessingTest extends PApplet {
     public void draw(){
         background(0);
         translate(height/ 2, width / 2);
-        drawVectorsPolar();
+    //    drawVectorsPolar();
         drawGrid();
         drawPendulums();
     }
@@ -64,14 +48,8 @@ public class ProcessingTest extends PApplet {
 
     public void mousePressed() {
         PVector mouseCoords = translatedMouse();
-        float r = sqrt(pow(mouseCoords.x, 2) + pow(mouseCoords.y, 2));
-        float theta = atan(mouseCoords.y / mouseCoords.x);
-        if (mouseCoords.x < 0) {
-            theta += PI;
-        }
-        Pendulum pendulum = new Pendulum(this, theta, r, 0);
+        Pendulum pendulum = new Pendulum(mouseCoords, this);
         pendulums.add(pendulum);
-        println("Adding pendulum at r: " + r + " theta: " + theta);
     }
 
     public static void main(String... args){
