@@ -27,7 +27,7 @@ public class Pendulum {
     public Pendulum(PVector startCoords, PVector endCoords, PApplet p) {
         this.startCoords = startCoords;
         float r = startCoords.dist(endCoords);
-        float theta = atan(endCoords.y / endCoords.x);
+        float theta = atan((endCoords.y - startCoords.y) / (endCoords.x - startCoords.x));
         if (endCoords.x < 0) {
             theta += PI;
         }
