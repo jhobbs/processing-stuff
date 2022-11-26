@@ -56,15 +56,17 @@ public class ProcessingTest extends PApplet {
         }
     }
 
+    private PVector translatedMouse() {
+        return new PVector(mouseX - width/2, -(mouseY - height/2));
+    }
+
     final private ArrayList<Pendulum> pendulums = new ArrayList<>();
 
     public void mousePressed() {
-        int actualX = mouseX - width/2;
-        int actualY = -(mouseY - height/2);
-        println("x: " + actualX + " y: " + actualY);
-        float r = sqrt(pow(actualX, 2) + pow(actualY, 2));
-        float theta = atan((float)actualY / actualX);
-        if (actualX < 0) {
+        PVector mouseCoords = translatedMouse();
+        float r = sqrt(pow(mouseCoords.x, 2) + pow(mouseCoords.y, 2));
+        float theta = atan(mouseCoords.y / mouseCoords.x);
+        if (mouseCoords.x < 0) {
             theta += PI;
         }
         Pendulum pendulum = new Pendulum(this, theta, r, 0);
