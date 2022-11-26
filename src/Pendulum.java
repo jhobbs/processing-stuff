@@ -11,6 +11,8 @@ public class Pendulum {
     float velocity;
     PApplet p;
 
+    PVector startCoords;
+
     private double effectiveTheta() {
         if (theta > PI/2 && theta < (3*PI)/2) {
             return theta - (3 * (PI/2));
@@ -22,17 +24,11 @@ public class Pendulum {
         return theta + PI/2;
     }
 
-    public Pendulum(PApplet p, float theta, float r, float velocity) {
-        this.r = r;
-        this.velocity = velocity;
-        this.theta = theta;
-        this.p  = p;
-    }
-
-    public Pendulum(PVector mouseCoords, PApplet p) {
-        float r = sqrt(pow(mouseCoords.x, 2) + pow(mouseCoords.y, 2));
-        float theta = atan(mouseCoords.y / mouseCoords.x);
-        if (mouseCoords.x < 0) {
+    public Pendulum(PVector startCoords, PVector endCoords, PApplet p) {
+        this.startCoords = startCoords;
+        float r = sqrt(pow(endCoords.x, 2) + pow(endCoords.y, 2));
+        float theta = atan(endCoords.y / endCoords.x);
+        if (endCoords.x < 0) {
             theta += PI;
         }
         this.p = p;

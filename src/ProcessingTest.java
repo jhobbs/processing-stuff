@@ -47,8 +47,9 @@ public class ProcessingTest extends PApplet {
     final private ArrayList<Pendulum> pendulums = new ArrayList<>();
 
     public void mousePressed() {
+        PVector startCoords = new PVector(0, 0);
         PVector mouseCoords = translatedMouse();
-        Pendulum pendulum = new Pendulum(mouseCoords, this);
+        Pendulum pendulum = new Pendulum(startCoords, mouseCoords, this);
         pendulums.add(pendulum);
     }
 
