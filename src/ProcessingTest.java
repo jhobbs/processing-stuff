@@ -24,6 +24,7 @@ public class ProcessingTest extends PApplet {
     public void setup() {
         background(0);
         strokeWeight(2);
+        stroke(126);
     }
 
     public void draw(){
@@ -31,8 +32,8 @@ public class ProcessingTest extends PApplet {
         scale(1, -1);
         translate(width/ 2, -(height / 2));
     //    drawVectorsPolar();
-        drawGrid();
-        line(0, 0, 250, 250);
+    //    drawGrid();
+    //    line(0, 0, 250, 250);
         drawPendulums();
     }
 
