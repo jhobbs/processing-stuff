@@ -32,7 +32,7 @@ public class Pendulum {
         return theta;
     }
     private PVector p2c(float theta) {
-        return new PVector(length * cos(theta) - startCoords.x, length * sin(theta) - startCoords.y);
+        return new PVector(length * cos(theta) + startCoords.x, length * sin(theta) + startCoords.y);
     }
 
     public Pendulum(PVector startCoords, PVector endCoords, PApplet p) {
@@ -41,7 +41,10 @@ public class Pendulum {
         this.length = startCoords.dist(endCoords);
         this.p = p;
         this.velocity = 0;
-        println("Creating pendulum from " + startCoords + " to " + endCoords + "; length: " + length + " theta: " + getTheta());
+        println("Creating pendulum from " + startCoords + " to " + endCoords + "; length: "
+                + length + " theta: " + getTheta() + " effTheta: " + effectiveTheta()
+                + "acceleration: " + acceleration()
+        );
     }
 
     public float acceleration() {

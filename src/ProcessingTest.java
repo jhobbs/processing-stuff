@@ -56,7 +56,7 @@ public class ProcessingTest extends PApplet {
 
     public void mouseReleased() {
         PVector mouseCoords = translatedMouse();
-        Pendulum pendulum = new Pendulum(new PVector(0, 0), mouseCoords, this);
+        Pendulum pendulum = new Pendulum(startCoords, mouseCoords, this);
         pendulums.add(pendulum);
     }
 
