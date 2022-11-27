@@ -46,7 +46,7 @@ public class Pendulum {
 
     public float acceleration() {
         //FixME: should be sin(theta)
-        double gravitational = - ((0.2/length) * effectiveTheta());
+        double gravitational = - ((0.25/length) * sin((float)effectiveTheta()));
         double drag;
         if (velocity != 0) {
             int sign;
