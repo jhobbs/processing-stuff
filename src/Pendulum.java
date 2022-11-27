@@ -6,14 +6,17 @@ import static processing.core.PApplet.*;
 
 @Data
 public class Pendulum {
-    float theta;
-    float r;
     float velocity;
     PApplet p;
 
     PVector startCoords;
 
+    PVector endCoords;
+
+    private float length;
+
     private double effectiveTheta() {
+        float theta = getTheta();
         if (theta > PI/2 && theta < (3*PI)/2) {
             return theta - (3 * (PI/2));
         }
@@ -24,22 +27,26 @@ public class Pendulum {
         return theta + PI/2;
     }
 
+    private float getTheta() {
+        float theta = atan2(endCoords.y - startCoords.y, endCoords.x - startCoords.x);
+        return theta;
+    }
+    private PVector p2c(float theta) {
+        return new PVector(length * cos(theta) - startCoords.x, length * sin(theta) - startCoords.y);
+    }
+
     public Pendulum(PVector startCoords, PVector endCoords, PApplet p) {
         this.startCoords = startCoords;
-        float r = startCoords.dist(endCoords);
-        float theta = atan((endCoords.y - startCoords.y) / (endCoords.x - startCoords.x));
-        if (endCoords.x < 0) {
-            theta += PI;
-        }
+        this.endCoords = endCoords;
+        this.length = startCoords.dist(endCoords);
         this.p = p;
-        this.r = r;
-        this.theta = theta;
         this.velocity = 0;
-        println("Creating pendulum at r: " + r + " theta: " + theta);
+        println("Creating pendulum from " + startCoords + " to " + endCoords + "; length: " + length + " theta: " + getTheta());
     }
 
     public float acceleration() {
-        double gravitational = - ((0.2/r) * effectiveTheta());
+        //FixME: should be sin(theta)
+        double gravitational = - ((0.2/length) * effectiveTheta());
         double drag;
         if (velocity != 0) {
             int sign;
@@ -59,14 +66,15 @@ public class Pendulum {
     }
 
     public void move() {
-        theta += velocity;
+        float currentTheta = getTheta();
+        currentTheta += velocity;
+        endCoords = p2c(currentTheta);
         velocity += acceleration();
     }
 
     public void draw() {
-        PVector pendulumLocation = Util.p2c(r, theta);
-        p.circle(pendulumLocation.x, pendulumLocation.y, 20);
-        p.line(0, 0, pendulumLocation.x, pendulumLocation.y);
+        p.circle(endCoords.x, endCoords.y, 20);
+        p.line(startCoords.x, startCoords.y, endCoords.x, endCoords.y);
         move();
     }
 }

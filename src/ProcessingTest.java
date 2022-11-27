@@ -28,9 +28,11 @@ public class ProcessingTest extends PApplet {
 
     public void draw(){
         background(0);
-        translate(height/ 2, width / 2);
+        scale(1, -1);
+        translate(width/ 2, -(height / 2));
     //    drawVectorsPolar();
         drawGrid();
+        line(0, 0, 250, 250);
         drawPendulums();
     }
 
@@ -49,12 +51,12 @@ public class ProcessingTest extends PApplet {
     PVector startCoords;
 
     public void mousePressed() {
-        startCoords = new PVector(0, 0);
+        startCoords = translatedMouse();
     }
 
     public void mouseReleased() {
         PVector mouseCoords = translatedMouse();
-        Pendulum pendulum = new Pendulum(startCoords, mouseCoords, this);
+        Pendulum pendulum = new Pendulum(new PVector(0, 0), mouseCoords, this);
         pendulums.add(pendulum);
     }
 
