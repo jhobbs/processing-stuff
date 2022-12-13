@@ -48,7 +48,6 @@ public class Pendulum {
     }
 
     public float acceleration() {
-        //FixME: should be sin(theta)
         double gravitational = - ((0.25/length) * sin((float)effectiveTheta()));
         double drag;
         if (velocity != 0) {
@@ -58,8 +57,8 @@ public class Pendulum {
             } else {
                 sign = 1;
             }
-            drag = sign * (abs(pow(velocity, 2)) * 0.002) ;
-            drag += sign * (abs(pow(velocity, 1)) * 0.002) ;
+            drag = sign * (abs(pow(velocity, 2)) * 0.004) ;
+           // drag += sign * (abs(pow(velocity, 1)) * 0.002) ;
         } else {
             drag = 0;
         }
@@ -76,7 +75,9 @@ public class Pendulum {
     }
 
     public void draw() {
-        p.circle(endCoords.x, endCoords.y, 20);
+        p.fill((int)(255 * abs((acceleration()*1000))), abs((velocity*1000)), 255);
+        p.circle(endCoords.x, endCoords.y, 50);
+        //p.stroke(156);
         p.line(startCoords.x, startCoords.y, endCoords.x, endCoords.y);
         move();
     }
