@@ -85,13 +85,13 @@ public class ProcessingTest extends PApplet {
         }
     }
 
-    PVector randomNewParticle() {
+    Particle randomNewParticle() {
         float x = random(-scaledSize, scaledSize);
         float y = random(-scaledSize, scaledSize);
-        return new PVector(x, y);
+        return new Particle(x, y);
     }
 
-    ArrayList<PVector> particles = new ArrayList<>();
+    ArrayList<Particle> particles = new ArrayList<>();
 
     void maybeNewParticle() {
         if (particles.size() < 10) {
@@ -100,18 +100,20 @@ public class ProcessingTest extends PApplet {
     }
 
     void drawParticles() {
-        for (PVector particle: particles) {
-            circle(sX(particle.x), sY(particle.y), 20);
+        noStroke();
+        for (Particle particle: particles) {
+            fill(particle.r, particle.g, particle.b);
+            circle(sX(particle.position.x), sY(particle.position.y), 20);
         }
+        stroke(156.0f);
     }
 
     void moveParticles() {
-        for (PVector particle: particles) {
-            float rotation = getRotation(particle.x, particle.y);
+        for (Particle particle: particles) {
+            float rotation = getRotation(particle.position.x, particle.position.y);
             float deltaX = cos(rotation);
             float deltaY = sin(rotation);
-            particle.x += deltaX * 0.01;
-            particle.y += deltaY * 0.01;
+            particle.position.add(deltaX * 0.01f, deltaY * 0.01f);
         }
     }
 
@@ -119,13 +121,11 @@ public class ProcessingTest extends PApplet {
         float x = nX((mouseX - width/2.0f));
         float y = nY(-(mouseY -height/2.0f));
         println("adding at (" + x + ", " + y + ")");
-        particles.add(
-                new PVector(x, y)
-        );
+        particles.add(new Particle(x, y));
     }
 
     void cullParticles() {
-        particles.removeIf(p -> abs(p.x) > scaledSize || abs(p.y) > scaledSize);
+        particles.removeIf(p -> abs(p.position.x) > scaledSize || abs(p.position.y) > scaledSize);
     }
 
     public void setup() {
