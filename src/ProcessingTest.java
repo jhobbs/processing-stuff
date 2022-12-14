@@ -86,9 +86,7 @@ public class ProcessingTest extends PApplet {
     }
 
     Particle randomNewParticle() {
-        float x = random(-scaledSize, scaledSize);
-        float y = random(-scaledSize, scaledSize);
-        return new Particle(x, y);
+        return new Particle(scaledSize);
     }
 
     ArrayList<Particle> particles = new ArrayList<>();
@@ -111,9 +109,8 @@ public class ProcessingTest extends PApplet {
     void moveParticles() {
         for (Particle particle: particles) {
             float rotation = getRotation(particle.position.x, particle.position.y);
-            float deltaX = cos(rotation);
-            float deltaY = sin(rotation);
-            particle.position.add(deltaX * 0.01f, deltaY * 0.01f);
+            PVector delta = new PVector(cos(rotation) * 0.01f, sin(rotation) * 0.01f);
+            particle.move(delta);
         }
     }
 
@@ -121,11 +118,11 @@ public class ProcessingTest extends PApplet {
         float x = nX((mouseX - width/2.0f));
         float y = nY(-(mouseY -height/2.0f));
         println("adding at (" + x + ", " + y + ")");
-        particles.add(new Particle(x, y));
+        particles.add(new Particle(scaledSize, x, y));
     }
 
     void cullParticles() {
-        particles.removeIf(p -> abs(p.position.x) > scaledSize || abs(p.position.y) > scaledSize);
+        particles.removeIf(Particle::offGrid);
     }
 
     public void setup() {
