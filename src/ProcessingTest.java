@@ -12,6 +12,11 @@ public class ProcessingTest extends PApplet {
     private final int maxX = width / 2;
     private final int maxY = height / 2;
 
+    private final int scaledSize = 5;
+
+    private final int scaledX = maxX / scaledSize;
+    private final int scaledY = maxY / scaledSize;
+
     private final int spacing = boxSize / 20;
 
     public void settings(){
@@ -24,15 +29,42 @@ public class ProcessingTest extends PApplet {
         stroke(126);
     }
 
-    private void drawVectorsPolar() {
-        float angularSpacing = TWO_PI * ((float)spacing/boxSize);
-        for (int r = maxY - spacing; r > 0; r -= spacing) {
-            for (float theta = 0; theta < TWO_PI; theta += angularSpacing) {
-                //println("theta: " + theta + " r: " + r);
-                PVector point = Util.p2c(r, theta);
-                PVector endpoint = Util.p2c(r, theta + (float)spacing/4);
-                point(point.x, point.y);
-                line(point.x, point.y, endpoint.x, endpoint.y);
+    private float sX(float x) {
+        return x * scaledX;
+    }
+
+    private float sY(float y) {
+        return y * scaledY;
+    }
+
+    private void drawTicks() {
+        for (int x = -scaledSize; x <= scaledSize; x += 1) {
+            line(sX(x), 10, sX(x), -10);
+        }
+        for (int y = -scaledSize; y <= scaledSize; y += 1) {
+            line(-10, sY(y), 10, sY(y));
+        }
+    }
+
+    private float getSlope(float x, float y) {
+        if (x + y == 0)
+            return 100;
+        return (x - y) / (x + y);
+    }
+
+    private void drawLineElement(float x, float y) {
+        float slope = getSlope(x, y);
+        pushMatrix();
+        translate(sX(x), sY(y));
+        rotate(atan(slope));
+        line(sX(- 0.1f), 0, sX(0.1f), 0);
+        popMatrix();
+    }
+
+    void drawLineElements() {
+        for (float x = -scaledSize; x <= scaledSize; x += 0.4) {
+            for (float y = -scaledSize; y <= scaledSize; y += 0.2) {
+                drawLineElement(x, y);
             }
         }
     }
@@ -44,33 +76,13 @@ public class ProcessingTest extends PApplet {
 
     public void draw(){
         background(0);
-        translate(height/ 2, width / 2);
-        drawVectorsPolar();
+        scale(1, -1);
+        translate(width/2, -(height/2));
         drawGrid();
-        drawPendulums();
+        drawTicks();
+        drawLineElements();
     }
 
-    private void drawPendulums() {
-        for (Pendulum pendulum: pendulums) {
-            pendulum.draw();
-        }
-    }
-
-    final private ArrayList<Pendulum> pendulums = new ArrayList<>();
-
-    public void mousePressed() {
-        int actualX = mouseX - width/2;
-        int actualY = -(mouseY - height/2);
-        println("x: " + actualX + " y: " + actualY);
-        float r = sqrt(pow(actualX, 2) + pow(actualY, 2));
-        float theta = atan((float)actualY / actualX);
-        if (actualX < 0) {
-            theta += PI;
-        }
-        Pendulum pendulum = new Pendulum(this, theta, r, 0);
-        pendulums.add(pendulum);
-        println("Adding pendulum at r: " + r + " theta: " + theta);
-    }
 
     public static void main(String... args){
         PApplet.main("ProcessingTest");
