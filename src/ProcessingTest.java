@@ -14,11 +14,6 @@ public class ProcessingTest extends PApplet {
 
     private final int scaledSize = 5;
 
-    private final int scaledX = maxX / scaledSize;
-    private final int scaledY = maxY / scaledSize;
-
-    private final int spacing = boxSize / 20;
-
     public void settings(){
         size(width, height);
     }
@@ -30,10 +25,22 @@ public class ProcessingTest extends PApplet {
     }
 
     private float sX(float x) {
+        float scaledX = maxX / (float)scaledSize;
         return x * scaledX;
     }
 
     private float sY(float y) {
+        float scaledY = maxY / (float)scaledSize;
+        return y * scaledY;
+    }
+
+    private float nX(float x) {
+        float scaledX = (float)scaledSize / maxX;
+        return x * scaledX;
+    }
+
+    private float nY(float y) {
+        float scaledY = (float)scaledSize / maxX;
         return y * scaledY;
     }
 
@@ -46,18 +53,27 @@ public class ProcessingTest extends PApplet {
         }
     }
 
-    private float getSlope(float x, float y) {
-        if (x + y == 0)
-            return 100;
-        return (x - y) / (x + y);
+    private float getRotation(float x, float y) {
+        /*if (x - y == 0)
+            return PI/2;
+        return atan((x + y) / (x - y));*/
+        /*if (x == 0)
+            return 0;
+        return atan(2 * y / x);*/
+        //return atan(pow(x, 2) - y);
+//        return atan(sin(x)*scaledSize);
+        //return 2*y - pow(y, 2);
+        //return (x / 4) * (-y);
+        //return atan(x * y);
+        return atan(1);
     }
 
     private void drawLineElement(float x, float y) {
-        float slope = getSlope(x, y);
         pushMatrix();
         translate(sX(x), sY(y));
-        rotate(atan(slope));
+        rotate(getRotation(x, y));
         line(sX(- 0.1f), 0, sX(0.1f), 0);
+        triangle(sX(0.1f), 0, sX(0.075f), sY(0.02f), sX(0.075f), sY(-0.02f));
         popMatrix();
     }
 
@@ -67,6 +83,49 @@ public class ProcessingTest extends PApplet {
                 drawLineElement(x, y);
             }
         }
+    }
+
+    PVector randomNewParticle() {
+        float x = random(-scaledSize, scaledSize);
+        float y = random(-scaledSize, scaledSize);
+        return new PVector(x, y);
+    }
+
+    ArrayList<PVector> particles = new ArrayList<>();
+
+    void maybeNewParticle() {
+        if (particles.size() < 10) {
+            particles.add(randomNewParticle());
+        }
+    }
+
+    void drawParticles() {
+        for (PVector particle: particles) {
+            circle(sX(particle.x), sY(particle.y), 20);
+        }
+    }
+
+    void moveParticles() {
+        for (PVector particle: particles) {
+            float rotation = getRotation(particle.x, particle.y);
+            float deltaX = cos(rotation);
+            float deltaY = sin(rotation);
+            particle.x += deltaX * 0.01;
+            particle.y += deltaY * 0.01;
+        }
+    }
+
+    public void mousePressed() {
+        float x = nX((mouseX - width/2.0f));
+        float y = nY(-(mouseY -height/2.0f));
+        println("adding at (" + x + ", " + y + ")");
+        particles.add(
+                new PVector(x, y)
+        );
+    }
+
+    void cullParticles() {
+        particles.removeIf(p -> abs(p.x) > scaledSize || abs(p.y) > scaledSize);
     }
 
     public void setup() {
@@ -81,6 +140,10 @@ public class ProcessingTest extends PApplet {
         drawGrid();
         drawTicks();
         drawLineElements();
+        maybeNewParticle();
+        drawParticles();
+        moveParticles();
+        cullParticles();
     }
 
 
