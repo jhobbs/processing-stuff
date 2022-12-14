@@ -60,12 +60,12 @@ public class ProcessingTest extends PApplet {
         /*if (x == 0)
             return 0;
         return atan(2 * y / x);*/
-        //return atan(pow(x, 2) - y);
+        return atan(pow(x, 2) - y);
 //        return atan(sin(x)*scaledSize);
         //return 2*y - pow(y, 2);
         //return (x / 4) * (-y);
         //return atan(x * y);
-        return atan(1);
+        //return atan(1);
     }
 
     private void drawLineElement(float x, float y) {
