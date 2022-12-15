@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -11,6 +12,8 @@ public class Particle {
 
     float scaleSize;
     PVector position;
+
+    ArrayList<PVector> positionHistory = new ArrayList<>();
 
     int r, g, b;
 
@@ -23,6 +26,7 @@ public class Particle {
     }
 
     public void move(PVector delta) {
+        positionHistory.add(position.copy());
         position.add(delta);
     }
 
