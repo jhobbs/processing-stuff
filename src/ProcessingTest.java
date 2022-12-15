@@ -54,10 +54,14 @@ public class ProcessingTest extends PApplet {
         }
     }
 
-    //SlopeFunction slopeFunction = (x, y) -> {  atan(x * y); };
-    //SlopeFunction slopeFunction = (x, y) -> {  return atan(2 * y - pow(y, 2)); };
-    //SlopeFunction slopeFunction = (x, y) -> {  return atan(x/4 * (-y) ); };
-    SlopeFunction slopeFunction = (x, y) -> {  return atan(x * y); };
+    static List<SlopeFunction> slopeFunctions = Arrays.asList(
+            (x, y) -> {  return atan(x * y); },
+            (x, y) -> {  return atan(2 * y - pow(y, 2)); },
+            (x, y) -> {  return atan(x/4 * (-y) ); },
+            (x, y) -> {  return atan(x * y); }
+    );
+
+    SlopeFunction slopeFunction;
 
     private float getRotation(float x, float y) {
         /*if (x - y == 0)
@@ -156,6 +160,8 @@ public class ProcessingTest extends PApplet {
     public void setup() {
         background(0);
         strokeWeight(2);
+        Random random = new Random();
+        slopeFunction = slopeFunctions.get(random.nextInt(slopeFunctions.size()));
         makeIntegralCurves();
     }
 

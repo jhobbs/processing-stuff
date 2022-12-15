@@ -29,21 +29,18 @@ public class IntegralCurve {
         addPoints(x, y);
     }
 
+    public void tracePath(float x, float y, float increment) {
+        PVector currentPoint = new PVector(x, y);
+        while (abs(currentPoint.x) < scaleSize && abs(currentPoint.y) < scaleSize) {
+            points.add(currentPoint.copy());
+            float rotation = slopeFunction.getSlope(currentPoint.x, currentPoint.y);
+            PVector delta = new PVector((float) cos(rotation) * increment, (float) sin(rotation) * increment);
+            currentPoint.add(delta);
+        }
+    }
+
     public void addPoints(float x, float y) {
-        PVector startPoint = new PVector(x, y);
-        PVector currentPoint = startPoint.copy();
-        while (abs(currentPoint.x) < scaleSize && abs(currentPoint.y) < scaleSize) {
-            points.add(currentPoint.copy());
-            float rotation = slopeFunction.getSlope(currentPoint.x, currentPoint.y);
-            PVector delta = new PVector((float) cos(rotation) * 0.01f, (float) sin(rotation) * 0.01f);
-            currentPoint.add(delta);
-        }
-        currentPoint = startPoint.copy();
-        while (abs(currentPoint.x) < scaleSize && abs(currentPoint.y) < scaleSize) {
-            points.add(currentPoint.copy());
-            float rotation = slopeFunction.getSlope(currentPoint.x, currentPoint.y);
-            PVector delta = new PVector((float) cos(rotation) * -0.01f, (float) sin(rotation) * -0.01f);
-            currentPoint.add(delta);
-        }
+        tracePath(x, y, 0.01f);
+        tracePath(x, y, -0.01f);
     }
 }
