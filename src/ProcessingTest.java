@@ -15,13 +15,15 @@ public class ProcessingTest extends PApplet {
 
     private final int scaledSize = 5;
 
+    private final float pixelSize = (1.0f/boxSize) * scaledSize*2;
+
     public void settings(){
         size(width, height);
     }
 
     private void drawGrid() {
-        line(0, maxY, 0, -maxY);
-        line(-maxX, 0, maxX, 0);
+        line(0, scaledSize, 0, -scaledSize);
+        line(-scaledSize, 0, scaledSize, 0);
         stroke(126);
     }
 
@@ -47,10 +49,10 @@ public class ProcessingTest extends PApplet {
 
     private void drawTicks() {
         for (int x = -scaledSize; x <= scaledSize; x += 1) {
-            line(sX(x), 10, sX(x), -10);
+            line(x, 0.2f, x, -0.2f);
         }
         for (int y = -scaledSize; y <= scaledSize; y += 1) {
-            line(-10, sY(y), 10, sY(y));
+            line(-0.2f, y, 0.2f, y);
         }
     }
 
@@ -80,10 +82,11 @@ public class ProcessingTest extends PApplet {
 
     private void drawLineElement(float x, float y) {
         pushMatrix();
-        translate(sX(x), sY(y));
+        translate(x, y);
         rotate(getRotation(x, y));
-        line(sX(- 0.1f), 0, sX(0.1f), 0);
-        triangle(sX(0.1f), 0, sX(0.075f), sY(0.02f), sX(0.075f), sY(-0.02f));
+        float tickWidth = pixelSize * 10;
+        line(-tickWidth, 0, tickWidth, 0);
+        triangle(tickWidth, 0, tickWidth * 0.75f, tickWidth * 0.2f, tickWidth * 0.75f, -(tickWidth *.2f));
         popMatrix();
     }
 
@@ -112,7 +115,7 @@ public class ProcessingTest extends PApplet {
         for (Particle particle: particles) {
             fill(particle.r, particle.g, particle.b);
             for (PVector historicalPosition: particle.positionHistory) {
-                circle(sX(historicalPosition.x), sY(historicalPosition.y), 20);
+                circle(historicalPosition.x, historicalPosition.y, pixelSize * 5);
             }
         }
         stroke(156.0f);
@@ -139,7 +142,7 @@ public class ProcessingTest extends PApplet {
 
     ArrayList<IntegralCurve> integralCurves = new ArrayList<>();
     void makeIntegralCurves() {
-        for (int i = 0; i < 400; i++) {
+        for (int i = 0; i < 10; i++) {
             integralCurves.add(new IntegralCurve(slopeFunction, scaledSize));
         }
     }
@@ -149,8 +152,8 @@ public class ProcessingTest extends PApplet {
             for (PVector point : curve.points) {
                 stroke(curve.r, curve.b, curve.g);
                 fill(curve.r, curve.b, curve.g);
-                //point(sX(point.x), sX(point.y));
-                circle(sX(point.x), sX(point.y), 1);
+                //point(point.x, point.y);
+                circle(point.x, point.y, pixelSize * 10);
                 noStroke();
             }
         }
@@ -159,19 +162,20 @@ public class ProcessingTest extends PApplet {
 
     public void setup() {
         background(0);
-        strokeWeight(2);
+        strokeWeight(pixelSize);
         Random random = new Random();
         slopeFunction = slopeFunctions.get(random.nextInt(slopeFunctions.size()));
         makeIntegralCurves();
     }
 
     public void draw(){
+        stroke(156.0f);
         background(0);
-        scale(1, -1);
-        translate(width/2, -(height/2));
-        //drawGrid();
-        //drawTicks();
-        //drawLineElements();
+        scale((boxSize / ((float)scaledSize * 2)), -(boxSize/((float)scaledSize * 2)));
+        translate(scaledSize, -(scaledSize));
+        drawGrid();
+        drawTicks();
+        drawLineElements();
         maybeNewParticle();
         drawParticles();
         moveParticles();
