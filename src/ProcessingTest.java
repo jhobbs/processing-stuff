@@ -1,3 +1,4 @@
+import partition.CircularPartition;
 import partition.PartitionFunction;
 import partition.VerticalPartition;
 import processing.core.PApplet;
@@ -31,16 +32,6 @@ public class ProcessingTest extends PApplet {
         stroke(126);
     }
 
-    private float sX(float x) {
-        float scaledX = maxX / (float)scaleSize;
-        return x * scaledX;
-    }
-
-    private float sY(float y) {
-        float scaledY = maxY / (float)scaleSize;
-        return y * scaledY;
-    }
-
     private float nX(float x) {
         float scaledX = (float)scaleSize / maxX;
         return x * scaledX;
@@ -64,7 +55,9 @@ public class ProcessingTest extends PApplet {
             (x, y) -> {  return atan(x * y); },
             (x, y) -> {  return atan(2 * y - pow(y, 2)); },
             (x, y) -> {  return atan(x/4 * (-y) ); },
-            (x, y) -> {  return atan(x * y); }
+            (x, y) -> {  return atan(x * y); },
+            (x, y) -> {  return atan(x); },
+            (x, y) -> {  return atan(y); }
     );
 
     SlopeFunction slopeFunction;
@@ -164,7 +157,8 @@ public class ProcessingTest extends PApplet {
     }
 
     List<PartitionFunction> partitionFunctions = Arrays.asList(
-            new VerticalPartition(scaleSize)
+            new VerticalPartition(scaleSize),
+            new CircularPartition(scaleSize)
     );
 
     SlopeFunction compositeSlopeFunction() {
@@ -188,14 +182,18 @@ public class ProcessingTest extends PApplet {
         makeIntegralCurves();
     }
 
+    public void drawGuides() {
+        drawGrid();
+        drawTicks();
+        drawLineElements();
+    }
+
     public void draw(){
         stroke(156.0f);
         background(0);
         scale((boxSize / ((float)scaleSize * 2)), -(boxSize/((float)scaleSize * 2)));
         translate(scaleSize, -(scaleSize));
-        drawGrid();
-        drawTicks();
-        drawLineElements();
+        //drawGuides();
         maybeNewParticle();
         drawParticles();
         moveParticles();
