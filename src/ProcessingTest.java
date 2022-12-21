@@ -1,3 +1,5 @@
+import partition.PartitionFunction;
+import partition.VerticalPartition;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -13,9 +15,9 @@ public class ProcessingTest extends PApplet {
     private final int maxX = width / 2;
     private final int maxY = height / 2;
 
-    private final int scaledSize = 5;
+    private final int scaleSize = 5;
 
-    private final float pixelSize = (1.0f/boxSize) * scaledSize*2;
+    private final float pixelSize = (1.0f/boxSize) * scaleSize*2;
 
     private final float particleSize = pixelSize * 5;
 
@@ -24,36 +26,36 @@ public class ProcessingTest extends PApplet {
     }
 
     private void drawGrid() {
-        line(0, scaledSize, 0, -scaledSize);
-        line(-scaledSize, 0, scaledSize, 0);
+        line(0, scaleSize, 0, -scaleSize);
+        line(-scaleSize, 0, scaleSize, 0);
         stroke(126);
     }
 
     private float sX(float x) {
-        float scaledX = maxX / (float)scaledSize;
+        float scaledX = maxX / (float)scaleSize;
         return x * scaledX;
     }
 
     private float sY(float y) {
-        float scaledY = maxY / (float)scaledSize;
+        float scaledY = maxY / (float)scaleSize;
         return y * scaledY;
     }
 
     private float nX(float x) {
-        float scaledX = (float)scaledSize / maxX;
+        float scaledX = (float)scaleSize / maxX;
         return x * scaledX;
     }
 
     private float nY(float y) {
-        float scaledY = (float)scaledSize / maxX;
+        float scaledY = (float)scaleSize / maxX;
         return y * scaledY;
     }
 
     private void drawTicks() {
-        for (int x = -scaledSize; x <= scaledSize; x += 1) {
+        for (int x = -scaleSize; x <= scaleSize; x += 1) {
             line(x, 0.2f, x, -0.2f);
         }
-        for (int y = -scaledSize; y <= scaledSize; y += 1) {
+        for (int y = -scaleSize; y <= scaleSize; y += 1) {
             line(-0.2f, y, 0.2f, y);
         }
     }
@@ -75,7 +77,7 @@ public class ProcessingTest extends PApplet {
             return 0;
         return atan(2 * y / x);*/
         return slopeFunction.getSlope(x, y);
-//        return atan(sin(x)*scaledSize);
+//        return atan(sin(x)*scaleSize);
         //return 2*y - pow(y, 2);
         //return (x / 4) * (-y);
         //return atan(x * y);
@@ -93,15 +95,15 @@ public class ProcessingTest extends PApplet {
     }
 
     void drawLineElements() {
-        for (float x = -scaledSize; x <= scaledSize; x += 0.4) {
-            for (float y = -scaledSize; y <= scaledSize; y += 0.2) {
+        for (float x = -scaleSize; x <= scaleSize; x += 0.4) {
+            for (float y = -scaleSize; y <= scaleSize; y += 0.2) {
                 drawLineElement(x, y);
             }
         }
     }
 
     Particle randomNewParticle() {
-        return new Particle(scaledSize);
+        return new Particle(scaleSize);
     }
 
     ArrayList<Particle> particles = new ArrayList<>();
@@ -135,7 +137,7 @@ public class ProcessingTest extends PApplet {
         float x = nX((mouseX - width/2.0f));
         float y = nY(-(mouseY -height/2.0f));
         println("adding at (" + x + ", " + y + ")");
-        particles.add(new Particle(scaledSize, x, y));
+        particles.add(new Particle(scaleSize, x, y));
     }
 
     void cullParticles() {
@@ -144,8 +146,8 @@ public class ProcessingTest extends PApplet {
 
     ArrayList<IntegralCurve> integralCurves = new ArrayList<>();
     void makeIntegralCurves() {
-        for (int i = 0; i < 10; i++) {
-            integralCurves.add(new IntegralCurve(slopeFunction, scaledSize));
+        for (int i = 0; i < 100; i++) {
+            integralCurves.add(new IntegralCurve(slopeFunction, scaleSize));
         }
     }
 
@@ -161,10 +163,22 @@ public class ProcessingTest extends PApplet {
         }
     }
 
+    List<PartitionFunction> partitionFunctions = Arrays.asList(
+            new VerticalPartition(scaleSize)
+    );
 
     SlopeFunction compositeSlopeFunction() {
         Random random = new Random();
-        return slopeFunctions.get(random.nextInt(slopeFunctions.size()));
+        List<SlopeFunction> slopeFunctions1 = Arrays.asList(
+                slopeFunctions.get(random.nextInt(slopeFunctions.size())),
+                slopeFunctions.get(random.nextInt(slopeFunctions.size()))
+        );
+
+        PartitionFunction partitionFunction = partitionFunctions.get(random.nextInt(partitionFunctions.size()));
+
+        return (x, y) -> {
+            return slopeFunctions1.get(partitionFunction.getPartition(x, y)).getSlope(x, y);
+        };
     }
 
     public void setup() {
@@ -177,8 +191,8 @@ public class ProcessingTest extends PApplet {
     public void draw(){
         stroke(156.0f);
         background(0);
-        scale((boxSize / ((float)scaledSize * 2)), -(boxSize/((float)scaledSize * 2)));
-        translate(scaledSize, -(scaledSize));
+        scale((boxSize / ((float)scaleSize * 2)), -(boxSize/((float)scaleSize * 2)));
+        translate(scaleSize, -(scaleSize));
         drawGrid();
         drawTicks();
         drawLineElements();
