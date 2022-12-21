@@ -12,6 +12,8 @@ public class IntegralCurve {
 
     float scaleSize;
 
+    final int MAX_TRACE_LEN = 4000;
+
     static float randomInScale(float scaleSize) {
         return -scaleSize + (float)random() * scaleSize * 2;
     }
@@ -31,7 +33,9 @@ public class IntegralCurve {
 
     public void tracePath(float x, float y, float increment) {
         PVector currentPoint = new PVector(x, y);
-        while (abs(currentPoint.x) < scaleSize && abs(currentPoint.y) < scaleSize) {
+        for (int traceCount = 0;
+                traceCount < MAX_TRACE_LEN && (currentPoint.x) < scaleSize && abs(currentPoint.y) < scaleSize;
+                traceCount++) {
             points.add(currentPoint.copy());
             float rotation = slopeFunction.getSlope(currentPoint.x, currentPoint.y);
             PVector delta = new PVector((float) cos(rotation) * increment, (float) sin(rotation) * increment);

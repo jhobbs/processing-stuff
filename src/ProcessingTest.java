@@ -16,7 +16,7 @@ public class ProcessingTest extends PApplet {
     private final int maxX = width / 2;
     private final int maxY = height / 2;
 
-    private final int scaleSize = 5;
+    static private final int scaleSize = 5;
 
     private final float pixelSize = (1.0f/boxSize) * scaleSize*2;
 
@@ -57,24 +57,26 @@ public class ProcessingTest extends PApplet {
             (x, y) -> {  return atan(x/4 * (-y) ); },
             (x, y) -> {  return atan(x * y); },
             (x, y) -> {  return atan(x); },
-            (x, y) -> {  return atan(y); }
+            (x, y) -> {  return atan(y); },
+            (x, y) -> {
+                if (x - y == 0)
+                    return PI/2;
+                return atan((x + y) / (x - y));
+            },
+            (x, y) -> {
+                if (x == 0)
+                    return 0;
+                return atan(2 * y / x);
+            },
+            (x, y) -> {
+                return atan(sin(x)*scaleSize);
+            }
     );
 
     SlopeFunction slopeFunction;
 
     private float getRotation(float x, float y) {
-        /*if (x - y == 0)
-            return PI/2;
-        return atan((x + y) / (x - y));*/
-        /*if (x == 0)
-            return 0;
-        return atan(2 * y / x);*/
         return slopeFunction.getSlope(x, y);
-//        return atan(sin(x)*scaleSize);
-        //return 2*y - pow(y, 2);
-        //return (x / 4) * (-y);
-        //return atan(x * y);
-        //return atan(1);
     }
 
     private void drawLineElement(float x, float y) {
