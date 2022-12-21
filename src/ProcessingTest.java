@@ -20,7 +20,7 @@ public class ProcessingTest extends PApplet {
 
     private final float pixelSize = (1.0f/boxSize) * scaleSize*2;
 
-    private final float particleSize = pixelSize * 5;
+    private final float particleSize = pixelSize * 15;
 
     public void settings(){
         size(width, height);
