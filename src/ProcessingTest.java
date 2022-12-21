@@ -142,7 +142,7 @@ public class ProcessingTest extends PApplet {
     ArrayList<IntegralCurve> integralCurves = new ArrayList<>();
     void makeIntegralCurves() {
         for (int i = 0; i < 100; i++) {
-            integralCurves.add(new IntegralCurve(slopeFunction, scaleSize));
+            integralCurves.add(new IntegralCurve(slopeFunction, scaleSize, particleSize));
         }
     }
 
