@@ -17,6 +17,8 @@ public class ProcessingTest extends PApplet {
 
     private final float pixelSize = (1.0f/boxSize) * scaledSize*2;
 
+    private final float particleSize = pixelSize * 5;
+
     public void settings(){
         size(width, height);
     }
@@ -115,7 +117,7 @@ public class ProcessingTest extends PApplet {
         for (Particle particle: particles) {
             fill(particle.r, particle.g, particle.b);
             for (PVector historicalPosition: particle.positionHistory) {
-                circle(historicalPosition.x, historicalPosition.y, pixelSize * 5);
+                circle(historicalPosition.x, historicalPosition.y, particleSize);
             }
         }
         stroke(156.0f);
@@ -124,7 +126,7 @@ public class ProcessingTest extends PApplet {
     void moveParticles() {
         for (Particle particle: particles) {
             float rotation = getRotation(particle.position.x, particle.position.y);
-            PVector delta = new PVector(cos(rotation) * 0.01f, sin(rotation) * 0.01f);
+            PVector delta = new PVector(cos(rotation) * (particleSize/2), sin(rotation) * (particleSize/2));
             particle.move(delta);
         }
     }
@@ -153,18 +155,22 @@ public class ProcessingTest extends PApplet {
                 stroke(curve.r, curve.b, curve.g);
                 fill(curve.r, curve.b, curve.g);
                 //point(point.x, point.y);
-                circle(point.x, point.y, pixelSize * 10);
+                circle(point.x, point.y, particleSize);
                 noStroke();
             }
         }
     }
 
 
+    SlopeFunction compositeSlopeFunction() {
+        Random random = new Random();
+        return slopeFunctions.get(random.nextInt(slopeFunctions.size()));
+    }
+
     public void setup() {
         background(0);
         strokeWeight(pixelSize);
-        Random random = new Random();
-        slopeFunction = slopeFunctions.get(random.nextInt(slopeFunctions.size()));
+        slopeFunction = compositeSlopeFunction();
         makeIntegralCurves();
     }
 
