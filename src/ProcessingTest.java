@@ -1,6 +1,4 @@
-import diffeq.FirstOrderODE;
-import diffeq.SlopeFunction;
-import diffeq.CircleODE;
+import diffeq.*;
 import partition.CircularPartition;
 import partition.PartitionFunction;
 import partition.VerticalPartition;
@@ -56,12 +54,14 @@ public class ProcessingTest extends PApplet {
     }
 
     static List<SlopeFunction> slopeFunctions = Arrays.asList(
-            (x, y) -> {  return atan(x * y); },
-            (x, y) -> {  return atan(2 * y - pow(y, 2)); },
-            (x, y) -> {  return atan(x/4 * (-y) ); },
-            (x, y) -> {  return atan(x * y); },
-            (x, y) -> {  return atan(x); },
-            (x, y) -> {  return atan(y); },
+            new MirroredParabolasODE(),
+            new SourceSinkODE(),
+            new TopODE(),
+            new VerticalParabolaODE(),
+            new HorizontalFrondODE(),
+            new CircleODE()
+            /*
+            (x, y) -> {  return atan(y); }
             (x, y) -> { return atan((pow(x, 2) - pow(y, 2))/(1+pow(x,2) + pow(y, 2))); },
             (x, y) -> { return atan(1+x*pow(y, 2)); },
             (x, y) -> { return atan((x - y)/ (1 + pow(x, 2))); },
@@ -77,7 +77,7 @@ public class ProcessingTest extends PApplet {
             },
             (x, y) -> {
                 return atan(sin(x)*scaleSize);
-            }
+            },*/
     );
 
     SlopeFunction slopeFunction;
@@ -183,13 +183,11 @@ public class ProcessingTest extends PApplet {
                 slopeFunctions.get(random.nextInt(slopeFunctions.size()))
         );
 
-        return fromFirstOrderODE(new CircleODE());
-/*
         PartitionFunction partitionFunction = partitionFunctions.get(random.nextInt(partitionFunctions.size()));
 
         return (x, y) -> {
             return slopeFunctions1.get(partitionFunction.getPartition(x, y)).getSlope(x, y);
-        };*/
+        };
     }
 
     public void setup() {
@@ -216,7 +214,7 @@ public class ProcessingTest extends PApplet {
         drawParticles();
         moveParticles();
         cullParticles();
-        //drawIntegralCurves();
+        drawIntegralCurves();
     }
 
     public static void main(String... args){

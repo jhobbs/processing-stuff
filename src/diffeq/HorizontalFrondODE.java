@@ -1,13 +1,13 @@
 package diffeq;
 
-public class CircleODE extends BaseFirstOrderODE {
+public class HorizontalFrondODE extends BaseFirstOrderODE {
     @Override
     public float dx_over_dt(float x, float y) {
-        return y;
+        return 1;
     }
 
     @Override
     public float dy_over_dt(float x, float y) {
-        return -x;
+        return y;
     }
 }
