@@ -23,6 +23,7 @@ public class ProcessingTest extends PApplet {
     private final float particleSize = pixelSize * 15;
 
     public void settings(){
+
         size(width, height);
     }
 
@@ -58,6 +59,9 @@ public class ProcessingTest extends PApplet {
             (x, y) -> {  return atan(x * y); },
             (x, y) -> {  return atan(x); },
             (x, y) -> {  return atan(y); },
+            (x, y) -> { return atan((pow(x, 2) - pow(y, 2))/(1+pow(x,2) + pow(y, 2))); },
+            (x, y) -> { return atan(1+x*pow(y, 2)); },
+            (x, y) -> { return atan((x - y)/ (1 + pow(x, 2))); },
             (x, y) -> {
                 if (x - y == 0)
                     return PI/2;
@@ -178,6 +182,7 @@ public class ProcessingTest extends PApplet {
     }
 
     public void setup() {
+        //colorMode(HSB, 360, 100, 100, 100);
         background(0);
         strokeWeight(pixelSize);
         slopeFunction = compositeSlopeFunction();
