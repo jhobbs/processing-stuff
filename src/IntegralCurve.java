@@ -1,3 +1,4 @@
+import diffeq.SlopeFunction;
 import processing.core.PVector;
 
 import java.util.ArrayList;

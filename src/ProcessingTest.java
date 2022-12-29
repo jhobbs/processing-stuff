@@ -1,3 +1,6 @@
+import diffeq.FirstOrderODE;
+import diffeq.SlopeFunction;
+import diffeq.CircleODE;
 import partition.CircularPartition;
 import partition.PartitionFunction;
 import partition.VerticalPartition;
@@ -127,7 +130,7 @@ public class ProcessingTest extends PApplet {
     void moveParticles() {
         for (Particle particle: particles) {
             float rotation = getRotation(particle.position.x, particle.position.y);
-            PVector delta = new PVector(cos(rotation) * (particleSize/2), sin(rotation) * (particleSize/2));
+            PVector delta = new PVector(cos(rotation) * (particleSize/10), sin(rotation) * (particleSize/10));
             particle.move(delta);
         }
     }
@@ -167,6 +170,12 @@ public class ProcessingTest extends PApplet {
             new CircularPartition(scaleSize)
     );
 
+    SlopeFunction fromFirstOrderODE(FirstOrderODE firstOrderODE) {
+        return (x, y) -> {
+            return atan2(firstOrderODE.dy_over_dt(x, y), firstOrderODE.dx_over_dt(x, y));
+        };
+    }
+
     SlopeFunction compositeSlopeFunction() {
         Random random = new Random();
         List<SlopeFunction> slopeFunctions1 = Arrays.asList(
@@ -174,11 +183,13 @@ public class ProcessingTest extends PApplet {
                 slopeFunctions.get(random.nextInt(slopeFunctions.size()))
         );
 
+        return fromFirstOrderODE(new CircleODE());
+/*
         PartitionFunction partitionFunction = partitionFunctions.get(random.nextInt(partitionFunctions.size()));
 
         return (x, y) -> {
             return slopeFunctions1.get(partitionFunction.getPartition(x, y)).getSlope(x, y);
-        };
+        };*/
     }
 
     public void setup() {
@@ -200,12 +211,12 @@ public class ProcessingTest extends PApplet {
         background(0);
         scale((boxSize / ((float)scaleSize * 2)), -(boxSize/((float)scaleSize * 2)));
         translate(scaleSize, -(scaleSize));
-        //drawGuides();
+        drawGuides();
         maybeNewParticle();
         drawParticles();
         moveParticles();
         cullParticles();
-        drawIntegralCurves();
+        //drawIntegralCurves();
     }
 
     public static void main(String... args){
