@@ -155,7 +155,8 @@ public class ProcessingTest extends PApplet {
     }
 
     void newRandomOdeModeler() {
-        odeModeler = new ODEModeler(compositeSlopeFunction());
+       // odeModeler = new ODEModeler(compositeSlopeFunction());
+        odeModeler = new ODEModeler(new LinearCoefficientsODE());
         scaleSize = (float)odeModeler.scaleSize;
         particleSize = (float)odeModeler.particleSize;
         pixelSize = (1.0f / boxSize) * scaleSize * 2;
@@ -179,7 +180,7 @@ public class ProcessingTest extends PApplet {
         background(0);
         scale((boxSize / (scaleSize * 2)), -(boxSize / (scaleSize * 2)));
         translate(scaleSize, -(scaleSize));
-        drawGuides();
+        //drawGuides();
         odeModeler.update();
         drawParticles();
         drawIntegralCurves();

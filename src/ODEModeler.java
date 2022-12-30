@@ -17,7 +17,7 @@ public class ODEModeler {
     public ODEModeler(FirstOrderODE ode) {
         this.ode = ode;
         this.scaleSize = ode.getScaleSize();
-        this.particleSize = scaleSize * 0.01;
+        this.particleSize = scaleSize * 0.02;
         makeIntegralCurves();
     }
 
