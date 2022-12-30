@@ -2,16 +2,14 @@ package diffeq.examples;
 
 import diffeq.BaseFirstOrderODE;
 
-import static processing.core.PApplet.pow;
-
 public class SpiralODE extends BaseFirstOrderODE {
     @Override
-    public float dx_over_dt(float x, float y) {
+    public double dx_over_dt(double x, double y) {
         return x - y;
     }
 
     @Override
-    public float dy_over_dt(float x, float y) {
+    public double dy_over_dt(double x, double y) {
         return x + y;
     }
 }

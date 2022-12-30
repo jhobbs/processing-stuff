@@ -6,6 +6,7 @@ import partition.VerticalPartition;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 
 
@@ -18,7 +19,7 @@ public class ProcessingTest extends PApplet {
     private final int maxX = width / 2;
     private final int maxY = height / 2;
 
-    static private final int scaleSize = 5;
+    static private final float scaleSize = 5;
 
     private final float pixelSize = (1.0f/boxSize) * scaleSize*2;
 
@@ -36,20 +37,20 @@ public class ProcessingTest extends PApplet {
     }
 
     private float nX(float x) {
-        float scaledX = (float)scaleSize / maxX;
+        float scaledX = scaleSize / maxX;
         return x * scaledX;
     }
 
     private float nY(float y) {
-        float scaledY = (float)scaleSize / maxX;
+        float scaledY = scaleSize / maxX;
         return y * scaledY;
     }
 
     private void drawTicks() {
-        for (int x = -scaleSize; x <= scaleSize; x += 1) {
+        for (int x = -round(scaleSize); x <= scaleSize; x += 1) {
             line(x, 0.2f, x, -0.2f);
         }
-        for (int y = -scaleSize; y <= scaleSize; y += 1) {
+        for (int y = -round(scaleSize); y <= scaleSize; y += 1) {
             line(-0.2f, y, 0.2f, y);
         }
     }
@@ -69,14 +70,14 @@ public class ProcessingTest extends PApplet {
             new HorizontalSinWaveODE()
     );
 
-    private float getRotation(float x, float y) {
+    private double getRotation(float x, float y) {
         return odeModeler.slopeFunction.getSlope(x, y);
     }
 
     private void drawLineElement(float x, float y) {
         pushMatrix();
         translate(x, y);
-        rotate(getRotation(x, y));
+        rotate((float) getRotation(x, y));
         float tickWidth = pixelSize * 10;
         line(-tickWidth, 0, tickWidth, 0);
         triangle(tickWidth, 0, tickWidth * 0.75f, tickWidth * 0.2f, tickWidth * 0.75f, -(tickWidth *.2f));
@@ -95,8 +96,8 @@ public class ProcessingTest extends PApplet {
         noStroke();
         for (Particle particle: odeModeler.particles) {
             fill(particle.r, particle.g, particle.b);
-            for (PVector historicalPosition: particle.positionHistory) {
-                circle(historicalPosition.x, historicalPosition.y, particleSize);
+            for (Point2D historicalPosition: particle.positionHistory) {
+                circle((float)historicalPosition.getX(), (float)historicalPosition.getY(), particleSize);
             }
         }
         stroke(156.0f);
@@ -115,11 +116,11 @@ public class ProcessingTest extends PApplet {
 
     private void drawIntegralCurves() {
         for (IntegralCurve curve : odeModeler.integralCurves) {
-            for (PVector point : curve.points) {
+            for (Point2D point : curve.points) {
                 stroke(curve.r, curve.b, curve.g);
                 fill(curve.r, curve.b, curve.g);
                 //point(point.x, point.y);
-                circle(point.x, point.y, particleSize);
+                circle((float)point.getX(), (float)point.getY(), particleSize);
                 noStroke();
             }
         }
@@ -166,7 +167,7 @@ public class ProcessingTest extends PApplet {
     public void draw(){
         stroke(156.0f);
         background(0);
-        scale((boxSize / ((float)scaleSize * 2)), -(boxSize/((float)scaleSize * 2)));
+        scale((boxSize / (scaleSize * 2)), -(boxSize/(scaleSize * 2)));
         translate(scaleSize, -(scaleSize));
         drawGuides();
         odeModeler.update();

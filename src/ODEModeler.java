@@ -1,21 +1,20 @@
-import diffeq.FirstOrderODE;
 import diffeq.SlopeFunction;
-import processing.core.PVector;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import static processing.core.PApplet.cos;
-import static processing.core.PApplet.sin;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 public class ODEModeler {
     SlopeFunction slopeFunction;
-    float scaleSize;
-    float particleSize;
+    double scaleSize;
+    double particleSize;
 
     ArrayList<IntegralCurve> integralCurves = new ArrayList<>();
     ArrayList<Particle> particles = new ArrayList<>();
 
-    public ODEModeler(SlopeFunction slopeFunction, float scaleSize, float particleSize) {
+    public ODEModeler(SlopeFunction slopeFunction, double scaleSize, double particleSize) {
         this.slopeFunction = slopeFunction;
         this.scaleSize = scaleSize;
         this.particleSize = particleSize;
@@ -41,8 +40,8 @@ public class ODEModeler {
 
     void moveParticles() {
         for (Particle particle: particles) {
-            float rotation = slopeFunction.getSlope(particle.position.x, particle.position.y);
-            PVector delta = new PVector(cos(rotation) * (particleSize/10), sin(rotation) * (particleSize/10));
+            double rotation = slopeFunction.getSlope(particle.position.getX(), particle.position.getY());
+            Point2D delta = new Point2D.Double(cos(rotation) * (particleSize / 10), sin(rotation) * (particleSize / 10));
             particle.move(delta);
         }
     }

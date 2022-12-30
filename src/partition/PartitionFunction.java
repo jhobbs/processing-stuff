@@ -1,5 +1,5 @@
 package partition;
 
 public interface PartitionFunction {
-    public int getPartition(float x, float y);
+    public int getPartition(double x, double y);
 }

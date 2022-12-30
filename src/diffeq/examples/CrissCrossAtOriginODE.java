@@ -4,12 +4,12 @@ import diffeq.BaseFirstOrderODE;
 
 public class CrissCrossAtOriginODE extends BaseFirstOrderODE {
     @Override
-    public float dx_over_dt(float x, float y) {
+    public double dx_over_dt(double x, double y) {
         return x;
     }
 
     @Override
-    public float dy_over_dt(float x, float y) {
+    public double dy_over_dt(double x, double y) {
         return 2 * y;
     }
 }

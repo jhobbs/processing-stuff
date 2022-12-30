@@ -2,16 +2,16 @@ package diffeq.examples;
 
 import diffeq.BaseFirstOrderODE;
 
-import static processing.core.PApplet.sin;
+import static java.lang.Math.sin;
 
 public class HorizontalSinWaveODE extends BaseFirstOrderODE {
     @Override
-    public float dx_over_dt(float x, float y) {
+    public double dx_over_dt(double x, double y) {
         return 1;
     }
 
     @Override
-    public float dy_over_dt(float x, float y) {
+    public double dy_over_dt(double x, double y) {
         return sin(x);
     }
 }

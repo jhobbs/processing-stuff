@@ -2,16 +2,16 @@ package diffeq.examples;
 
 import diffeq.BaseFirstOrderODE;
 
-import static processing.core.PApplet.pow;
+import static java.lang.Math.pow;
 
 public class CollapsingSourceODE extends BaseFirstOrderODE {
     @Override
-    public float dx_over_dt(float x, float y) {
+    public double dx_over_dt(double x, double y) {
         return 1;
     }
 
     @Override
-    public float dy_over_dt(float x, float y) {
+    public double dy_over_dt(double x, double y) {
         return 1+x*pow(y, 2);
     }
 }

@@ -2,16 +2,17 @@ package diffeq.examples;
 
 import diffeq.BaseFirstOrderODE;
 
-import static processing.core.PApplet.pow;
+import static java.lang.Math.pow;
+
 
 public class LefToRightConcentratorODE extends BaseFirstOrderODE {
     @Override
-    public float dx_over_dt(float x, float y) {
+    public double dx_over_dt(double x, double y) {
         return 1 + pow(x, 2);
     }
 
     @Override
-    public float dy_over_dt(float x, float y) {
+    public double dy_over_dt(double x, double y) {
         return x - y;
     }
 }
