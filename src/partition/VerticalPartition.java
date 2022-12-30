@@ -7,9 +7,10 @@ public class VerticalPartition implements PartitionFunction {
 
     public VerticalPartition(double scaleSize) {
         Random random = new Random();
-        xBoundary = random.nextGaussian(0, scaleSize/2);
+        xBoundary = random.nextGaussian(0, scaleSize / 2);
         System.out.println("boundary at x = " + xBoundary);
     }
+
     @Override
     public int getPartition(double x, double y) {
         if (x < xBoundary) {

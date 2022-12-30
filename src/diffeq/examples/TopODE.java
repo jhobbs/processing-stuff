@@ -10,6 +10,6 @@ public class TopODE extends BaseFirstOrderODE {
 
     @Override
     public double dy_over_dt(double x, double y) {
-        return x/4 * -y;
+        return x / 4 * -y;
     }
 }

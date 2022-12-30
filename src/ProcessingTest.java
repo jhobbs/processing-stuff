@@ -1,31 +1,47 @@
-import diffeq.*;
+import diffeq.SlopeFunction;
 import diffeq.examples.*;
 import partition.CircularPartition;
 import partition.PartitionFunction;
 import partition.VerticalPartition;
 import processing.core.PApplet;
-import processing.core.PVector;
 
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 
 public class ProcessingTest extends PApplet {
 
+    static private final float scaleSize = 5;
+    static List<SlopeFunction> slopeFunctions = Arrays.asList(
+            new MirroredParabolasODE(),
+            new SourceSinkODE(),
+            new TopODE(),
+            new VerticalParabolaODE(),
+            new HorizontalFrondODE(),
+            new CircleODE(),
+            new HorizontalWaveishODE(),
+            new CollapsingSourceODE(),
+            new LefToRightConcentratorODE(),
+            new SpiralODE(),
+            new CrissCrossAtOriginODE(),
+            new HorizontalSinWaveODE()
+    );
     private final int boxSize = 1000;
     private final int width = boxSize;
-    private final int height = boxSize;
-
     private final int maxX = width / 2;
+    private final int height = boxSize;
     private final int maxY = height / 2;
-
-    static private final float scaleSize = 5;
-
-    private final float pixelSize = (1.0f/boxSize) * scaleSize*2;
-
+    private final float pixelSize = (1.0f / boxSize) * scaleSize * 2;
     private final float particleSize = pixelSize * 5;
+    ODEModeler odeModeler;
 
-    public void settings(){
+    public static void main(String... args) {
+        PApplet.main("ProcessingTest");
+    }
+
+    public void settings() {
 
         size(width, height);
     }
@@ -55,21 +71,6 @@ public class ProcessingTest extends PApplet {
         }
     }
 
-    static List<SlopeFunction> slopeFunctions = Arrays.asList(
-            new MirroredParabolasODE(),
-            new SourceSinkODE(),
-            new TopODE(),
-            new VerticalParabolaODE(),
-            new HorizontalFrondODE(),
-            new CircleODE(),
-            new HorizontalWaveishODE(),
-            new CollapsingSourceODE(),
-            new LefToRightConcentratorODE(),
-            new SpiralODE(),
-            new CrissCrossAtOriginODE(),
-            new HorizontalSinWaveODE()
-    );
-
     private double getRotation(float x, float y) {
         return odeModeler.slopeFunction.getSlope(x, y);
     }
@@ -80,7 +81,7 @@ public class ProcessingTest extends PApplet {
         rotate((float) getRotation(x, y));
         float tickWidth = pixelSize * 10;
         line(-tickWidth, 0, tickWidth, 0);
-        triangle(tickWidth, 0, tickWidth * 0.75f, tickWidth * 0.2f, tickWidth * 0.75f, -(tickWidth *.2f));
+        triangle(tickWidth, 0, tickWidth * 0.75f, tickWidth * 0.2f, tickWidth * 0.75f, -(tickWidth * .2f));
         popMatrix();
     }
 
@@ -94,18 +95,18 @@ public class ProcessingTest extends PApplet {
 
     void drawParticles() {
         noStroke();
-        for (Particle particle: odeModeler.particles) {
+        for (Particle particle : odeModeler.particles) {
             fill(particle.r, particle.g, particle.b);
-            for (Point2D historicalPosition: particle.positionHistory) {
-                circle((float)historicalPosition.getX(), (float)historicalPosition.getY(), particleSize);
+            for (Point2D historicalPosition : particle.positionHistory) {
+                circle((float) historicalPosition.getX(), (float) historicalPosition.getY(), particleSize);
             }
         }
         stroke(156.0f);
     }
 
     public void mousePressed() {
-        float x = nX((mouseX - width/2.0f));
-        float y = nY(-(mouseY -height/2.0f));
+        float x = nX((mouseX - width / 2.0f));
+        float y = nY(-(mouseY - height / 2.0f));
         println("adding at (" + x + ", " + y + ")");
         odeModeler.particles.add(new Particle(scaleSize, x, y));
     }
@@ -120,7 +121,7 @@ public class ProcessingTest extends PApplet {
                 stroke(curve.r, curve.b, curve.g);
                 fill(curve.r, curve.b, curve.g);
                 //point(point.x, point.y);
-                circle((float)point.getX(), (float)point.getY(), particleSize);
+                circle((float) point.getX(), (float) point.getY(), particleSize);
                 noStroke();
             }
         }
@@ -145,8 +146,6 @@ public class ProcessingTest extends PApplet {
         };
     }
 
-    ODEModeler odeModeler;
-
     void newRandomOdeModeler() {
         odeModeler = new ODEModeler(compositeSlopeFunction(), scaleSize, particleSize);
     }
@@ -164,18 +163,14 @@ public class ProcessingTest extends PApplet {
         drawLineElements();
     }
 
-    public void draw(){
+    public void draw() {
         stroke(156.0f);
         background(0);
-        scale((boxSize / (scaleSize * 2)), -(boxSize/(scaleSize * 2)));
+        scale((boxSize / (scaleSize * 2)), -(boxSize / (scaleSize * 2)));
         translate(scaleSize, -(scaleSize));
         drawGuides();
         odeModeler.update();
         drawParticles();
         drawIntegralCurves();
-    }
-
-    public static void main(String... args){
-        PApplet.main("ProcessingTest");
     }
 }

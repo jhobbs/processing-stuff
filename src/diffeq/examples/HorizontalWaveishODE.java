@@ -7,7 +7,7 @@ import static java.lang.Math.pow;
 public class HorizontalWaveishODE extends BaseFirstOrderODE {
     @Override
     public double dx_over_dt(double x, double y) {
-        return 1 + pow(x,2) + pow(y, 2);
+        return 1 + pow(x, 2) + pow(y, 2);
     }
 
     @Override

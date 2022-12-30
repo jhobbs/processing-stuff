@@ -12,6 +12,6 @@ public class CollapsingSourceODE extends BaseFirstOrderODE {
 
     @Override
     public double dy_over_dt(double x, double y) {
-        return 1+x*pow(y, 2);
+        return 1 + x * pow(y, 2);
     }
 }

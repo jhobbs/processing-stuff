@@ -11,42 +11,42 @@ public class Pendulum {
     float velocity;
     PApplet p;
 
-    private double effectiveTheta() {
-        if (theta > PI/2 && theta < (3*PI)/2) {
-            return theta - (3 * (PI/2));
-        }
-
-        if (theta + PI/2 > 2 * PI) {
-            theta -= 2 * PI;
-        }
-        return theta + PI/2;
-    }
-
     public Pendulum(PApplet p, float theta, float r, float velocity) {
         this.r = r;
         this.velocity = velocity;
         this.theta = theta;
-        this.p  = p;
+        this.p = p;
+    }
+
+    private double effectiveTheta() {
+        if (theta > PI / 2 && theta < (3 * PI) / 2) {
+            return theta - (3 * (PI / 2));
+        }
+
+        if (theta + PI / 2 > 2 * PI) {
+            theta -= 2 * PI;
+        }
+        return theta + PI / 2;
     }
 
     public float acceleration() {
-        double gravitational = - ((0.2/r) * effectiveTheta());
+        double gravitational = -((0.2 / r) * effectiveTheta());
         double drag;
         if (velocity != 0) {
             int sign;
-            if (velocity >= 0 ) {
+            if (velocity >= 0) {
                 sign = -1;
             } else {
                 sign = 1;
             }
-            drag = sign * (abs(pow(velocity, 2)) * 0.002) ;
-            drag += sign * (abs(pow(velocity, 1)) * 0.002) ;
+            drag = sign * (abs(pow(velocity, 2)) * 0.002);
+            drag += sign * (abs(pow(velocity, 1)) * 0.002);
         } else {
             drag = 0;
         }
         double acceleration = gravitational + drag;
         //println("accel (" + r + ", " + effectiveTheta() + "): " + acceleration);
-        return (float)(acceleration);
+        return (float) (acceleration);
     }
 
     public void move() {

@@ -39,7 +39,7 @@ public class ODEModeler {
     }
 
     void moveParticles() {
-        for (Particle particle: particles) {
+        for (Particle particle : particles) {
             double rotation = slopeFunction.getSlope(particle.position.getX(), particle.position.getY());
             Point2D delta = new Point2D.Double(cos(rotation) * (particleSize / 10), sin(rotation) * (particleSize / 10));
             particle.move(delta);

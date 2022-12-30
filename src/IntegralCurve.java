@@ -17,10 +17,6 @@ public class IntegralCurve {
 
     final double particleSize;
 
-    static double randomInScale(double scaleSize) {
-        return -scaleSize + random() * scaleSize * 2;
-    }
-
     public IntegralCurve(SlopeFunction slopeFunction, double scaleSize, double particleSize) {
         this(slopeFunction, scaleSize, particleSize, randomInScale(scaleSize), randomInScale(scaleSize));
     }
@@ -35,20 +31,24 @@ public class IntegralCurve {
         addPoints(x, y);
     }
 
+    static double randomInScale(double scaleSize) {
+        return -scaleSize + random() * scaleSize * 2;
+    }
+
     public void tracePath(double x, double y, double increment) {
         Point2D currentPoint = new Point2D.Double(x, y);
         for (int traceCount = 0;
-                traceCount < MAX_TRACE_LEN && (currentPoint.getX()) < scaleSize && abs(currentPoint.getY()) < scaleSize;
-                traceCount++) {
+             traceCount < MAX_TRACE_LEN && (currentPoint.getX()) < scaleSize && abs(currentPoint.getY()) < scaleSize;
+             traceCount++) {
             points.add(currentPoint);
             double rotation = slopeFunction.getSlope(currentPoint.getX(), currentPoint.getY());
-            Point2D delta = new Point2D.Double( cos(rotation) * increment, sin(rotation) * increment);
+            Point2D delta = new Point2D.Double(cos(rotation) * increment, sin(rotation) * increment);
             currentPoint = new Point2D.Double(currentPoint.getX() + delta.getX(), currentPoint.getY() + delta.getY());
         }
     }
 
     public void addPoints(double x, double y) {
-        tracePath(x, y, particleSize/3);
-        tracePath(x, y, -particleSize/3);
+        tracePath(x, y, particleSize / 3);
+        tracePath(x, y, -particleSize / 3);
     }
 }
