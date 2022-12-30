@@ -1,8 +1,8 @@
-package diffeq;
+package diffeq.examples;
 
-import static processing.core.PApplet.pow;
+import diffeq.BaseFirstOrderODE;
 
-public class SourceSinkODE extends BaseFirstOrderODE {
+public class TopODE extends BaseFirstOrderODE {
     @Override
     public float dx_over_dt(float x, float y) {
         return 1;
@@ -10,6 +10,6 @@ public class SourceSinkODE extends BaseFirstOrderODE {
 
     @Override
     public float dy_over_dt(float x, float y) {
-        return 2 * y - pow(y, 2);
+        return x/4 * -y;
     }
 }

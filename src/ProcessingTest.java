@@ -1,4 +1,5 @@
 import diffeq.*;
+import diffeq.examples.*;
 import partition.CircularPartition;
 import partition.PartitionFunction;
 import partition.VerticalPartition;
@@ -68,10 +69,8 @@ public class ProcessingTest extends PApplet {
             new HorizontalSinWaveODE()
     );
 
-    SlopeFunction slopeFunction;
-
     private float getRotation(float x, float y) {
-        return slopeFunction.getSlope(x, y);
+        return odeModeler.slopeFunction.getSlope(x, y);
     }
 
     private void drawLineElement(float x, float y) {
@@ -92,21 +91,9 @@ public class ProcessingTest extends PApplet {
         }
     }
 
-    Particle randomNewParticle() {
-        return new Particle(scaleSize);
-    }
-
-    ArrayList<Particle> particles = new ArrayList<>();
-
-    void maybeNewParticle() {
-        if (particles.size() < -10) {
-            particles.add(randomNewParticle());
-        }
-    }
-
     void drawParticles() {
         noStroke();
-        for (Particle particle: particles) {
+        for (Particle particle: odeModeler.particles) {
             fill(particle.r, particle.g, particle.b);
             for (PVector historicalPosition: particle.positionHistory) {
                 circle(historicalPosition.x, historicalPosition.y, particleSize);
@@ -115,34 +102,19 @@ public class ProcessingTest extends PApplet {
         stroke(156.0f);
     }
 
-    void moveParticles() {
-        for (Particle particle: particles) {
-            float rotation = getRotation(particle.position.x, particle.position.y);
-            PVector delta = new PVector(cos(rotation) * (particleSize/10), sin(rotation) * (particleSize/10));
-            particle.move(delta);
-        }
-    }
-
     public void mousePressed() {
         float x = nX((mouseX - width/2.0f));
         float y = nY(-(mouseY -height/2.0f));
         println("adding at (" + x + ", " + y + ")");
-        particles.add(new Particle(scaleSize, x, y));
+        odeModeler.particles.add(new Particle(scaleSize, x, y));
     }
 
-    void cullParticles() {
-        particles.removeIf(Particle::offGrid);
-    }
-
-    ArrayList<IntegralCurve> integralCurves = new ArrayList<>();
-    void makeIntegralCurves() {
-        for (int i = 0; i < 100; i++) {
-            integralCurves.add(new IntegralCurve(slopeFunction, scaleSize, particleSize));
-        }
+    public void keyPressed() {
+        newRandomOdeModeler();
     }
 
     private void drawIntegralCurves() {
-        for (IntegralCurve curve : integralCurves) {
+        for (IntegralCurve curve : odeModeler.integralCurves) {
             for (PVector point : curve.points) {
                 stroke(curve.r, curve.b, curve.g);
                 fill(curve.r, curve.b, curve.g);
@@ -153,18 +125,12 @@ public class ProcessingTest extends PApplet {
         }
     }
 
-    List<PartitionFunction> partitionFunctions = Arrays.asList(
-            new VerticalPartition(scaleSize),
-            new CircularPartition(scaleSize)
-    );
-
-    SlopeFunction fromFirstOrderODE(FirstOrderODE firstOrderODE) {
-        return (x, y) -> {
-            return atan2(firstOrderODE.dy_over_dt(x, y), firstOrderODE.dx_over_dt(x, y));
-        };
-    }
-
     SlopeFunction compositeSlopeFunction() {
+        List<PartitionFunction> partitionFunctions = Arrays.asList(
+                new VerticalPartition(scaleSize),
+                new CircularPartition(scaleSize)
+        );
+
         Random random = new Random();
         List<SlopeFunction> slopeFunctions1 = Arrays.asList(
                 slopeFunctions.get(random.nextInt(slopeFunctions.size())),
@@ -178,12 +144,17 @@ public class ProcessingTest extends PApplet {
         };
     }
 
+    ODEModeler odeModeler;
+
+    void newRandomOdeModeler() {
+        odeModeler = new ODEModeler(compositeSlopeFunction(), scaleSize, particleSize);
+    }
+
     public void setup() {
         //colorMode(HSB, 360, 100, 100, 100);
         background(0);
         strokeWeight(pixelSize);
-        slopeFunction = compositeSlopeFunction();
-        makeIntegralCurves();
+        newRandomOdeModeler();
     }
 
     public void drawGuides() {
@@ -198,10 +169,8 @@ public class ProcessingTest extends PApplet {
         scale((boxSize / ((float)scaleSize * 2)), -(boxSize/((float)scaleSize * 2)));
         translate(scaleSize, -(scaleSize));
         drawGuides();
-        maybeNewParticle();
+        odeModeler.update();
         drawParticles();
-        moveParticles();
-        cullParticles();
         drawIntegralCurves();
     }
 

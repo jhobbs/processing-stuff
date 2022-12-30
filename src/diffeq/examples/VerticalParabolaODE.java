@@ -1,6 +1,8 @@
-package diffeq;
+package diffeq.examples;
 
-public class TopODE extends BaseFirstOrderODE {
+import diffeq.BaseFirstOrderODE;
+
+public class VerticalParabolaODE extends BaseFirstOrderODE {
     @Override
     public float dx_over_dt(float x, float y) {
         return 1;
@@ -8,6 +10,6 @@ public class TopODE extends BaseFirstOrderODE {
 
     @Override
     public float dy_over_dt(float x, float y) {
-        return x/4 * -y;
+        return x;
     }
 }

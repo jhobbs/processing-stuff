@@ -1,15 +1,17 @@
-package diffeq;
+package diffeq.examples;
+
+import diffeq.BaseFirstOrderODE;
 
 import static processing.core.PApplet.pow;
 
-public class CollapsingSourceODE extends BaseFirstOrderODE {
+public class SpiralODE extends BaseFirstOrderODE {
     @Override
     public float dx_over_dt(float x, float y) {
-        return 1;
+        return x - y;
     }
 
     @Override
     public float dy_over_dt(float x, float y) {
-        return 1+x*pow(y, 2);
+        return x + y;
     }
 }

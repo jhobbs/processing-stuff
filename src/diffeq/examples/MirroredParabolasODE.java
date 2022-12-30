@@ -1,4 +1,6 @@
-package diffeq;
+package diffeq.examples;
+
+import diffeq.BaseFirstOrderODE;
 
 public class MirroredParabolasODE extends BaseFirstOrderODE {
     @Override

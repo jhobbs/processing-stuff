@@ -1,8 +1,8 @@
-package diffeq;
+package diffeq.examples;
 
-import static processing.core.PApplet.sin;
+import diffeq.BaseFirstOrderODE;
 
-public class HorizontalSinWaveODE extends BaseFirstOrderODE {
+public class HorizontalFrondODE extends BaseFirstOrderODE {
     @Override
     public float dx_over_dt(float x, float y) {
         return 1;
@@ -10,6 +10,6 @@ public class HorizontalSinWaveODE extends BaseFirstOrderODE {
 
     @Override
     public float dy_over_dt(float x, float y) {
-        return sin(x);
+        return y;
     }
 }
