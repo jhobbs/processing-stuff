@@ -21,7 +21,7 @@ public class ProcessingTest extends PApplet {
 
     private final float pixelSize = (1.0f/boxSize) * scaleSize*2;
 
-    private final float particleSize = pixelSize * 15;
+    private final float particleSize = pixelSize * 5;
 
     public void settings(){
 
@@ -59,25 +59,13 @@ public class ProcessingTest extends PApplet {
             new TopODE(),
             new VerticalParabolaODE(),
             new HorizontalFrondODE(),
-            new CircleODE()
-            /*
-            (x, y) -> {  return atan(y); }
-            (x, y) -> { return atan((pow(x, 2) - pow(y, 2))/(1+pow(x,2) + pow(y, 2))); },
-            (x, y) -> { return atan(1+x*pow(y, 2)); },
-            (x, y) -> { return atan((x - y)/ (1 + pow(x, 2))); },
-            (x, y) -> {
-                if (x - y == 0)
-                    return PI/2;
-                return atan((x + y) / (x - y));
-            },
-            (x, y) -> {
-                if (x == 0)
-                    return 0;
-                return atan(2 * y / x);
-            },
-            (x, y) -> {
-                return atan(sin(x)*scaleSize);
-            },*/
+            new CircleODE(),
+            new HorizontalWaveishODE(),
+            new CollapsingSourceODE(),
+            new LefToRightConcentratorODE(),
+            new SpiralODE(),
+            new CrissCrossAtOriginODE(),
+            new HorizontalSinWaveODE()
     );
 
     SlopeFunction slopeFunction;
