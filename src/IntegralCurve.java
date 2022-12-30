@@ -42,8 +42,9 @@ public class IntegralCurve {
              traceCount++) {
             points.add(currentPoint);
             double rotation = slopeFunction.getSlope(currentPoint.getX(), currentPoint.getY());
-            Point2D delta = new Point2D.Double(cos(rotation) * increment, sin(rotation) * increment);
-            currentPoint = new Point2D.Double(currentPoint.getX() + delta.getX(), currentPoint.getY() + delta.getY());
+            currentPoint = new Point2D.Double(
+                    currentPoint.getX() + cos(rotation) * increment,
+                    currentPoint.getY() + sin(rotation) * increment);
         }
     }
 
