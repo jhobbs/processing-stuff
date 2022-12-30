@@ -1,4 +1,4 @@
-import diffeq.SlopeFunction;
+import diffeq.FirstOrderODE;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import static java.lang.Math.*;
 public class IntegralCurve {
     final ArrayList<Point2D> points = new ArrayList<>();
     final int r, g, b;
-    final SlopeFunction slopeFunction;
+    final FirstOrderODE ode;
 
     final double scaleSize;
 
@@ -17,13 +17,13 @@ public class IntegralCurve {
 
     final double particleSize;
 
-    public IntegralCurve(SlopeFunction slopeFunction, double scaleSize, double particleSize) {
-        this(slopeFunction, scaleSize, particleSize, randomInScale(scaleSize), randomInScale(scaleSize));
+    public IntegralCurve(FirstOrderODE ode, double particleSize) {
+        this(ode, particleSize, randomInScale(ode.getScaleSize()), randomInScale(ode.getScaleSize()));
     }
 
-    IntegralCurve(SlopeFunction slopeFunction, double scaleSize, double particleSize, double x, double y) {
-        this.slopeFunction = slopeFunction;
-        this.scaleSize = scaleSize;
+    IntegralCurve(FirstOrderODE ode, double particleSize, double x, double y) {
+        this.ode = ode;
+        this.scaleSize = ode.getScaleSize();
         this.particleSize = particleSize;
         r = ThreadLocalRandom.current().nextInt(0, 255 + 1);
         g = ThreadLocalRandom.current().nextInt(0, 255 + 1);
@@ -41,7 +41,7 @@ public class IntegralCurve {
              traceCount < MAX_TRACE_LEN && (currentPoint.getX()) < scaleSize && abs(currentPoint.getY()) < scaleSize;
              traceCount++) {
             points.add(currentPoint);
-            double rotation = slopeFunction.getSlope(currentPoint.getX(), currentPoint.getY());
+            double rotation = ode.getSlope(currentPoint.getX(), currentPoint.getY());
             currentPoint = new Point2D.Double(
                     currentPoint.getX() + cos(rotation) * increment,
                     currentPoint.getY() + sin(rotation) * increment);

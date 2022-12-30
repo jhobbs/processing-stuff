@@ -1,4 +1,5 @@
-import diffeq.SlopeFunction;
+import diffeq.BaseFirstOrderODE;
+import diffeq.FirstOrderODE;
 import diffeq.examples.*;
 import partition.CircularPartition;
 import partition.PartitionFunction;
@@ -13,8 +14,8 @@ import java.util.Random;
 
 public class ProcessingTest extends PApplet {
 
-    static private final float scaleSize = 5;
-    static List<SlopeFunction> slopeFunctions = Arrays.asList(
+    private float scaleSize;
+    static List<FirstOrderODE> odes = Arrays.asList(
             new MirroredParabolasODE(),
             new SourceSinkODE(),
             new TopODE(),
@@ -32,9 +33,8 @@ public class ProcessingTest extends PApplet {
     private final int width = boxSize;
     private final int maxX = width / 2;
     private final int height = boxSize;
-    private final int maxY = height / 2;
-    private final float pixelSize = (1.0f / boxSize) * scaleSize * 2;
-    private final float particleSize = pixelSize * 5;
+    private float pixelSize;
+    private float particleSize;
     ODEModeler odeModeler;
 
     public static void main(String... args) {
@@ -72,7 +72,7 @@ public class ProcessingTest extends PApplet {
     }
 
     private double getRotation(float x, float y) {
-        return odeModeler.slopeFunction.getSlope(x, y);
+        return odeModeler.ode.getSlope(x, y);
     }
 
     private void drawLineElement(float x, float y) {
@@ -127,34 +127,45 @@ public class ProcessingTest extends PApplet {
         }
     }
 
-    SlopeFunction compositeSlopeFunction() {
-        List<PartitionFunction> partitionFunctions = Arrays.asList(
-                new VerticalPartition(scaleSize),
-                new CircularPartition(scaleSize)
+    FirstOrderODE compositeSlopeFunction() {
+        Random random = new Random();
+        List<FirstOrderODE> chosenODEs = Arrays.asList(
+                odes.get(random.nextInt(odes.size())),
+                odes.get(random.nextInt(odes.size()))
         );
 
-        Random random = new Random();
-        List<SlopeFunction> slopeFunctions1 = Arrays.asList(
-                slopeFunctions.get(random.nextInt(slopeFunctions.size())),
-                slopeFunctions.get(random.nextInt(slopeFunctions.size()))
+        List<PartitionFunction> partitionFunctions = Arrays.asList(
+                new VerticalPartition(chosenODEs.get(0).getScaleSize()),
+                new CircularPartition(chosenODEs.get(0).getScaleSize())
         );
 
         PartitionFunction partitionFunction = partitionFunctions.get(random.nextInt(partitionFunctions.size()));
 
-        return (x, y) -> {
-            return slopeFunctions1.get(partitionFunction.getPartition(x, y)).getSlope(x, y);
+        return new BaseFirstOrderODE() {
+            @Override
+            public double dx_over_dt(double x, double y) {
+                return chosenODEs.get(partitionFunction.getPartition(x, y)).dx_over_dt(x, y);
+            }
+
+            @Override
+            public double dy_over_dt(double x, double y) {
+                return chosenODEs.get(partitionFunction.getPartition(x, y)).dy_over_dt(x, y);
+            }
         };
     }
 
     void newRandomOdeModeler() {
-        odeModeler = new ODEModeler(compositeSlopeFunction(), scaleSize, particleSize);
+        odeModeler = new ODEModeler(compositeSlopeFunction());
+        scaleSize = (float)odeModeler.scaleSize;
+        particleSize = (float)odeModeler.particleSize;
+        pixelSize = (1.0f / boxSize) * scaleSize * 2;
     }
 
     public void setup() {
         //colorMode(HSB, 360, 100, 100, 100);
         background(0);
-        strokeWeight(pixelSize);
         newRandomOdeModeler();
+        strokeWeight(pixelSize);
     }
 
     public void drawGuides() {
