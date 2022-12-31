@@ -86,8 +86,10 @@ public class ProcessingTest extends PApplet {
     }
 
     void drawLineElements() {
-        for (float x = -scaleSize; x <= scaleSize; x += 0.4) {
-            for (float y = -scaleSize; y <= scaleSize; y += 0.2) {
+        stroke(156.0f);
+        fill(156.0f);
+        for (float x = -scaleSize; x <= scaleSize; x += pixelSize * 50) {
+            for (float y = -scaleSize; y <= scaleSize; y += pixelSize * 50) {
                 drawLineElement(x, y);
             }
         }
@@ -118,6 +120,7 @@ public class ProcessingTest extends PApplet {
         switch (keyCode) {
             case 38 -> scaleSize += 1;
             case 40 -> { if (scaleSize > 1) { scaleSize -= 1; } }
+            default -> { if (key == 65535) { return; } }
         }
 
         switch (key) {
@@ -187,7 +190,7 @@ public class ProcessingTest extends PApplet {
             coeffs[i] = random.nextInt(10) - 5;
         }
 
-        scaleSize = random.nextInt(10);
+        scaleSize = random.nextInt(9) + 1;
     }
 
     void zeroOdeCoefficients() {
@@ -203,7 +206,7 @@ public class ProcessingTest extends PApplet {
         odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize));
         scaleSize = (float)odeModeler.getScaleSize();
         particleSize = (float)odeModeler.particleSize;
-        pixelSize = (1.0f / boxSize) * scaleSize * 2;
+        pixelSize = scaleSize * 0.002f; //(1.0f / boxSize) * scaleSize * 2;
     }
 
     public void setup() {
