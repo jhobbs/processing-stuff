@@ -8,20 +8,17 @@ public class LinearCoefficientsODE extends BaseFirstOrderODE {
 
     private final int a1, a2, b1, b2, c1, c2;
 
-    public LinearCoefficientsODE() {
-        Random random = new Random();
-        a1 = random.nextInt(10) - 5;
-        b1 = random.nextInt(10) - 5;
-        c1 = random.nextInt(10) - 5;
+    public LinearCoefficientsODE(int coeffs[], double scaleSize) {
+        a1 = coeffs[0];
+        b1 = coeffs[1];
+        c1 = coeffs[2];
+        a2 = coeffs[3];
+        b2 = coeffs[4];
+        c2 = coeffs[5];
+        setScaleSize(scaleSize);
 
-        a2 = random.nextInt(10) - 5;
-        b2 = random.nextInt(10) - 5;
-        c2 = random.nextInt(10) - 5;
-
-        System.out.println(
-                String.format("(%dx + %dy + %d)dx - (%dx + %dy + %d)dy = 0",
-                        a1, b1, c1, a2, b2, c2)
-        );
+        System.out.printf("(%dx + %dy + %d)dx - (%dx + %dy + %d)dy = 0; -%.02f <= x,y <= %.02f%n",
+                a1, b1, c1, a2, b2, c2, scaleSize, scaleSize);
     }
 
     @Override

@@ -1,4 +1,5 @@
 import diffeq.FirstOrderODE;
+import lombok.Getter;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -8,7 +9,9 @@ import static java.lang.Math.sin;
 
 public class ODEModeler {
     FirstOrderODE ode;
-    double scaleSize;
+
+    @Getter
+    private double scaleSize;
     double particleSize;
 
     ArrayList<IntegralCurve> integralCurves = new ArrayList<>();
@@ -16,9 +19,7 @@ public class ODEModeler {
 
     public ODEModeler(FirstOrderODE ode) {
         this.ode = ode;
-        this.scaleSize = ode.getScaleSize();
-        this.particleSize = scaleSize * 0.02;
-        makeIntegralCurves();
+        updateScaledSettings();
     }
 
     void makeIntegralCurves() {
@@ -53,5 +54,16 @@ public class ODEModeler {
         cullParticles();
         maybeNewParticle();
         moveParticles();
+    }
+
+    private void updateScaledSettings() {
+        this.scaleSize = ode.getScaleSize();
+        this.particleSize = scaleSize * 0.01;
+        makeIntegralCurves();
+    }
+
+    void setScaleSize(double scaleSize) {
+        ode.setScaleSize(scaleSize);
+        updateScaledSettings();
     }
 }

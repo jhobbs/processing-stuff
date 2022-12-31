@@ -8,4 +8,5 @@ public interface FirstOrderODE {
     double getSlope(double x, double y);
 
     double getScaleSize();
+    void setScaleSize(double scaleSize);
 }

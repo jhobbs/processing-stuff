@@ -14,4 +14,9 @@ public class VortexODE extends BaseFirstOrderODE {
     public double dy_over_dt(double x, double y) {
         return pow(x, 2);
     }
+
+    @Override
+    public double getScaleSize() {
+        return 2;
+    }
 }

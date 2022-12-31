@@ -111,8 +111,35 @@ public class ProcessingTest extends PApplet {
         odeModeler.particles.add(new Particle(scaleSize, x, y));
     }
 
+    int[] coeffs = {1,1,1,1,1,1};
+
     public void keyPressed() {
-        newRandomOdeModeler();
+
+        switch (keyCode) {
+            case 38 -> scaleSize += 1;
+            case 40 -> { if (scaleSize > 1) { scaleSize -= 1; } }
+        }
+
+        switch (key) {
+            case 'q' -> coeffs[0] += 1;
+            case 'a' -> coeffs[0] -= 1;
+            case 'w' -> coeffs[1] += 1;
+            case 's' -> coeffs[1] -= 1;
+            case 'e' -> coeffs[2] += 1;
+            case 'd' -> coeffs[2] -= 1;
+            case 'r' -> coeffs[3] += 1;
+            case 'f' -> coeffs[3] -= 1;
+            case 't' -> coeffs[4] += 1;
+            case 'g' -> coeffs[4] -= 1;
+            case 'y' -> coeffs[5] += 1;
+            case 'h' -> coeffs[5] -= 1;
+            case 'x' -> randomOdeCoefficients();
+            case 'z' -> zeroOdeCoefficients();
+            case 65535 -> {}
+            default -> { return; }
+        }
+
+        updateRandomOdeModeler();
     }
 
     private void drawIntegralCurves() {
@@ -154,10 +181,27 @@ public class ProcessingTest extends PApplet {
         };
     }
 
-    void newRandomOdeModeler() {
-       // odeModeler = new ODEModeler(compositeSlopeFunction());
-        odeModeler = new ODEModeler(new LinearCoefficientsODE());
-        scaleSize = (float)odeModeler.scaleSize;
+    void randomOdeCoefficients() {
+        Random random = new Random();
+        for (int i = 0; i < coeffs.length; i++) {
+            coeffs[i] = random.nextInt(10) - 5;
+        }
+
+        scaleSize = random.nextInt(10);
+    }
+
+    void zeroOdeCoefficients() {
+        Arrays.fill(coeffs, 0);
+    }
+
+    void resetOdeModeler() {
+        randomOdeCoefficients();
+        updateRandomOdeModeler();
+    }
+
+    void updateRandomOdeModeler() {
+        odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize));
+        scaleSize = (float)odeModeler.getScaleSize();
         particleSize = (float)odeModeler.particleSize;
         pixelSize = (1.0f / boxSize) * scaleSize * 2;
     }
@@ -165,7 +209,7 @@ public class ProcessingTest extends PApplet {
     public void setup() {
         //colorMode(HSB, 360, 100, 100, 100);
         background(0);
-        newRandomOdeModeler();
+        resetOdeModeler();
         strokeWeight(pixelSize);
     }
 
@@ -180,7 +224,7 @@ public class ProcessingTest extends PApplet {
         background(0);
         scale((boxSize / (scaleSize * 2)), -(boxSize / (scaleSize * 2)));
         translate(scaleSize, -(scaleSize));
-        //drawGuides();
+        drawGuides();
         odeModeler.update();
         drawParticles();
         drawIntegralCurves();

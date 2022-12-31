@@ -36,15 +36,26 @@ public class IntegralCurve {
     }
 
     public void tracePath(double x, double y, double increment) {
+        double recentXVelocity = 0;
+        double recentYVelocity = 0;
+
         Point2D currentPoint = new Point2D.Double(x, y);
         for (int traceCount = 0;
              traceCount < MAX_TRACE_LEN && (currentPoint.getX()) < scaleSize && abs(currentPoint.getY()) < scaleSize;
              traceCount++) {
             points.add(currentPoint);
             double rotation = ode.getSlope(currentPoint.getX(), currentPoint.getY());
-            currentPoint = new Point2D.Double(
-                    currentPoint.getX() + cos(rotation) * increment,
-                    currentPoint.getY() + sin(rotation) * increment);
+            double xDelta = cos(rotation) * increment;
+            double yDelta = sin(rotation) * increment;
+            Point2D newPoint = new Point2D.Double(
+                    currentPoint.getX() + xDelta,
+                    currentPoint.getY() + yDelta);
+            currentPoint = newPoint;
+            recentXVelocity = recentXVelocity * 0.8 + xDelta * 0.2;
+            recentYVelocity = recentYVelocity * 0.8 + yDelta * 0.2;
+            if (traceCount > 5 && (abs(recentXVelocity) < abs(increment/2) && abs(recentYVelocity) < abs(increment/2))) {
+                break;
+            }
         }
     }
 
