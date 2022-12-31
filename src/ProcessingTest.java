@@ -35,6 +35,8 @@ public class ProcessingTest extends PApplet {
     private final int height = boxSize;
     private float pixelSize;
     private float particleSize;
+
+    private double particleSizeScaler = 0.01;
     ODEModeler odeModeler;
     private int incrementDenominator = 3;
 
@@ -142,6 +144,8 @@ public class ProcessingTest extends PApplet {
             case '\'' -> { shouldDrawGuides = !shouldDrawGuides; return; }
             case ',' -> { if (incrementDenominator > 1)  incrementDenominator -= 1; }
             case '.' -> incrementDenominator += 1;
+            case '[' -> particleSizeScaler = particleSizeScaler / 2;
+            case ']' -> particleSizeScaler = particleSizeScaler * 2;
             case 65535 -> {}
             default -> { return; }
         }
@@ -207,7 +211,8 @@ public class ProcessingTest extends PApplet {
     }
 
     void updateRandomOdeModeler() {
-        odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize), incrementDenominator);
+        particleSize = (float)(scaleSize * particleSizeScaler);
+        odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize), incrementDenominator, particleSize);
         scaleSize = (float)odeModeler.getScaleSize();
         particleSize = (float)odeModeler.particleSize;
         pixelSize = scaleSize * 0.002f; //(1.0f / boxSize) * scaleSize * 2;

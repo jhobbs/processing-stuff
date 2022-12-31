@@ -19,9 +19,10 @@ public class ODEModeler {
     ArrayList<IntegralCurve> integralCurves = new ArrayList<>();
     ArrayList<Particle> particles = new ArrayList<>();
 
-    public ODEModeler(FirstOrderODE ode, int incrementDenominator) {
+    public ODEModeler(FirstOrderODE ode, int incrementDenominator, double particleSize) {
         this.ode = ode;
         this.incrementDenominator = incrementDenominator;
+        this.particleSize = particleSize;
         updateScaledSettings();
     }
 
@@ -61,7 +62,6 @@ public class ODEModeler {
 
     private void updateScaledSettings() {
         this.scaleSize = ode.getScaleSize();
-        this.particleSize = scaleSize * 0.01;
         makeIntegralCurves();
     }
 }
