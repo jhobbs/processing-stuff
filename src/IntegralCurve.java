@@ -13,18 +13,21 @@ public class IntegralCurve {
 
     final double scaleSize;
 
-    final int MAX_TRACE_LEN = 4000;
+    final int maxTraceLen;
 
     final double particleSize;
+    private final int incrementDenominator;
 
-    public IntegralCurve(FirstOrderODE ode, double particleSize) {
-        this(ode, particleSize, randomInScale(ode.getScaleSize()), randomInScale(ode.getScaleSize()));
+    public IntegralCurve(FirstOrderODE ode, double particleSize, int incrementDenominator) {
+        this(ode, particleSize, randomInScale(ode.getScaleSize()), randomInScale(ode.getScaleSize()), incrementDenominator);
     }
 
-    IntegralCurve(FirstOrderODE ode, double particleSize, double x, double y) {
+    IntegralCurve(FirstOrderODE ode, double particleSize, double x, double y, int incrementDenominator) {
         this.ode = ode;
         this.scaleSize = ode.getScaleSize();
         this.particleSize = particleSize;
+        this.incrementDenominator = incrementDenominator;
+        this.maxTraceLen = incrementDenominator * 1000;
         r = ThreadLocalRandom.current().nextInt(0, 255 + 1);
         g = ThreadLocalRandom.current().nextInt(0, 255 + 1);
         b = ThreadLocalRandom.current().nextInt(0, 255 + 1);
@@ -41,7 +44,7 @@ public class IntegralCurve {
 
         Point2D currentPoint = new Point2D.Double(x, y);
         for (int traceCount = 0;
-             traceCount < MAX_TRACE_LEN && (currentPoint.getX()) < scaleSize && abs(currentPoint.getY()) < scaleSize;
+             traceCount < maxTraceLen && (currentPoint.getX()) < scaleSize && abs(currentPoint.getY()) < scaleSize;
              traceCount++) {
             points.add(currentPoint);
             double rotation = ode.getSlope(currentPoint.getX(), currentPoint.getY());
@@ -60,7 +63,7 @@ public class IntegralCurve {
     }
 
     public void addPoints(double x, double y) {
-        tracePath(x, y, particleSize / 3);
-        tracePath(x, y, -particleSize / 3);
+        tracePath(x, y, particleSize / incrementDenominator);
+        tracePath(x, y, -particleSize / incrementDenominator);
     }
 }

@@ -36,6 +36,7 @@ public class ProcessingTest extends PApplet {
     private float pixelSize;
     private float particleSize;
     ODEModeler odeModeler;
+    private int incrementDenominator = 3;
 
     public static void main(String... args) {
         PApplet.main("ProcessingTest");
@@ -138,6 +139,9 @@ public class ProcessingTest extends PApplet {
             case 'h' -> coeffs[5] -= 1;
             case 'x' -> randomOdeCoefficients();
             case 'z' -> zeroOdeCoefficients();
+            case '\'' -> { shouldDrawGuides = !shouldDrawGuides; return; }
+            case ',' -> { if (incrementDenominator > 1)  incrementDenominator -= 1; }
+            case '.' -> incrementDenominator += 1;
             case 65535 -> {}
             default -> { return; }
         }
@@ -150,7 +154,7 @@ public class ProcessingTest extends PApplet {
             for (Point2D point : curve.points) {
                 stroke(curve.r, curve.b, curve.g);
                 fill(curve.r, curve.b, curve.g);
-                //point(point.x, point.y);
+                //point((float)point.getX(), (float)point.getY());
                 circle((float) point.getX(), (float) point.getY(), particleSize);
                 noStroke();
             }
@@ -203,7 +207,7 @@ public class ProcessingTest extends PApplet {
     }
 
     void updateRandomOdeModeler() {
-        odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize));
+        odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize), incrementDenominator);
         scaleSize = (float)odeModeler.getScaleSize();
         particleSize = (float)odeModeler.particleSize;
         pixelSize = scaleSize * 0.002f; //(1.0f / boxSize) * scaleSize * 2;
@@ -216,7 +220,12 @@ public class ProcessingTest extends PApplet {
         strokeWeight(pixelSize);
     }
 
+    boolean shouldDrawGuides = true;
+
     public void drawGuides() {
+        if (!shouldDrawGuides) {
+            return;
+        }
         drawGrid();
         drawTicks();
         drawLineElements();
