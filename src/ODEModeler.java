@@ -27,8 +27,12 @@ public class ODEModeler {
     }
 
     void makeIntegralCurves() {
+
+        int maxTraceLen = (int)(incrementDenominator / particleSize) * 100;
+        double increment = particleSize / incrementDenominator;
+
         for (int i = 0; i < 100; i++) {
-            integralCurves.add(new IntegralCurve(ode, particleSize, incrementDenominator));
+            integralCurves.add(new IntegralCurve(ode, particleSize, increment, maxTraceLen));
         }
     }
 

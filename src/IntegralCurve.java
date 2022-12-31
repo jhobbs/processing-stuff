@@ -16,18 +16,18 @@ public class IntegralCurve {
     final int maxTraceLen;
 
     final double particleSize;
-    private final int incrementDenominator;
+    private final double increment;
 
-    public IntegralCurve(FirstOrderODE ode, double particleSize, int incrementDenominator) {
-        this(ode, particleSize, randomInScale(ode.getScaleSize()), randomInScale(ode.getScaleSize()), incrementDenominator);
+    public IntegralCurve(FirstOrderODE ode, double particleSize, double increment, int maxTraceLen) {
+        this(ode, particleSize, randomInScale(ode.getScaleSize()), randomInScale(ode.getScaleSize()), increment, maxTraceLen);
     }
 
-    IntegralCurve(FirstOrderODE ode, double particleSize, double x, double y, int incrementDenominator) {
+    IntegralCurve(FirstOrderODE ode, double particleSize, double x, double y, double increment, int maxTraceLen) {
         this.ode = ode;
         this.scaleSize = ode.getScaleSize();
         this.particleSize = particleSize;
-        this.incrementDenominator = incrementDenominator;
-        this.maxTraceLen = incrementDenominator * 1000;
+        this.increment = increment;
+        this.maxTraceLen = maxTraceLen;
         r = ThreadLocalRandom.current().nextInt(0, 255 + 1);
         g = ThreadLocalRandom.current().nextInt(0, 255 + 1);
         b = ThreadLocalRandom.current().nextInt(0, 255 + 1);
@@ -63,7 +63,7 @@ public class IntegralCurve {
     }
 
     public void addPoints(double x, double y) {
-        tracePath(x, y, particleSize / incrementDenominator);
-        tracePath(x, y, -particleSize / incrementDenominator);
+        tracePath(x, y, increment);
+        tracePath(x, y, -increment);
     }
 }
