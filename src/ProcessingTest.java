@@ -203,10 +203,16 @@ public class ProcessingTest extends PApplet {
         }
 
         scaleSize = random.nextInt(9) + 1;
+        particleSizeScaler = random(0.001f, 0.03f);
+        incrementDenominator = random(0.002f, 6.0f);
+        integralCurveCount = random.nextInt(400) + 50;
     }
 
     void zeroOdeCoefficients() {
         Arrays.fill(coeffs, 0);
+        particleSizeScaler = 0.01;
+        incrementDenominator = 3.0f;
+        integralCurveCount = 100;
     }
 
     void resetOdeModeler() {
