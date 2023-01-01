@@ -38,7 +38,9 @@ public class ProcessingTest extends PApplet {
 
     private double particleSizeScaler = 0.01;
     ODEModeler odeModeler;
-    private int incrementDenominator = 3;
+    private double incrementDenominator = 3.0f;
+
+    private int integralCurveCount = 100;
 
     public static void main(String... args) {
         PApplet.main("ProcessingTest");
@@ -142,10 +144,12 @@ public class ProcessingTest extends PApplet {
             case 'x' -> randomOdeCoefficients();
             case 'z' -> zeroOdeCoefficients();
             case '\'' -> { shouldDrawGuides = !shouldDrawGuides; return; }
-            case ',' -> { if (incrementDenominator > 1)  incrementDenominator -= 1; }
-            case '.' -> incrementDenominator += 1;
-            case '[' -> particleSizeScaler = particleSizeScaler / 2;
-            case ']' -> particleSizeScaler = particleSizeScaler * 2;
+            case ',' -> incrementDenominator /= 2;
+            case '.' -> incrementDenominator *= 2;
+            case '[' -> particleSizeScaler /= 2;
+            case ']' -> particleSizeScaler *= 2;
+            case '<' -> integralCurveCount /= 2;
+            case '>' -> integralCurveCount *= 2;
             case 65535 -> {}
             default -> { return; }
         }
@@ -212,7 +216,7 @@ public class ProcessingTest extends PApplet {
 
     void updateRandomOdeModeler() {
         particleSize = (float)(scaleSize * particleSizeScaler);
-        odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize), incrementDenominator, particleSize);
+        odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize), incrementDenominator, particleSize, integralCurveCount);
         scaleSize = (float)odeModeler.getScaleSize();
         particleSize = (float)odeModeler.particleSize;
         pixelSize = scaleSize * 0.002f; //(1.0f / boxSize) * scaleSize * 2;

@@ -14,15 +14,18 @@ public class ODEModeler {
     private double scaleSize;
     double particleSize;
 
-    private final int incrementDenominator;
+    private final double incrementDenominator;
+
+    private final int integralCurveCount;
 
     ArrayList<IntegralCurve> integralCurves = new ArrayList<>();
     ArrayList<Particle> particles = new ArrayList<>();
 
-    public ODEModeler(FirstOrderODE ode, int incrementDenominator, double particleSize) {
+    public ODEModeler(FirstOrderODE ode, double incrementDenominator, double particleSize, int integralCurveCount) {
         this.ode = ode;
         this.incrementDenominator = incrementDenominator;
         this.particleSize = particleSize;
+        this.integralCurveCount = integralCurveCount;
         updateScaledSettings();
     }
 
@@ -31,7 +34,7 @@ public class ODEModeler {
         int maxTraceLen = (int)(incrementDenominator / particleSize) * 100;
         double increment = particleSize / incrementDenominator;
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < integralCurveCount; i++) {
             integralCurves.add(new IntegralCurve(ode, particleSize, increment, maxTraceLen));
         }
     }
