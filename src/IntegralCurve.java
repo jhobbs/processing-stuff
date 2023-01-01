@@ -38,6 +38,7 @@ public class IntegralCurve {
         return -scaleSize + random() * scaleSize * 2;
     }
 
+    //TODO: Investigate threading this to trace curves concurrently
     public void tracePath(double x, double y, double increment) {
         double recentXVelocity = 0;
         double recentYVelocity = 0;
@@ -46,6 +47,11 @@ public class IntegralCurve {
         for (int traceCount = 0;
              traceCount < maxTraceLen && (currentPoint.getX()) < scaleSize && abs(currentPoint.getY()) < scaleSize;
              traceCount++) {
+            /*
+            FIXME: we can be more accurate by iterating on smaller increments but not drawing a point for
+            each one. Let's say we need a circle drawn every 10 pixels to get the appearance of a smooth
+            line. We can iterate 10 or 100 or 1000 times instead of just one time for each circle.
+            */
             points.add(currentPoint);
             double rotation = ode.getSlope(currentPoint.getX(), currentPoint.getY());
             double xDelta = cos(rotation) * increment;
