@@ -38,6 +38,7 @@ public class ProcessingTest extends PApplet {
 
     private double particleSizeScaler = 0.01;
     ODEModeler odeModeler;
+    ODEModeler orthogonalODEModeler;
     private double incrementDenominator = 3.0f;
 
     private int integralCurveCount = 100;
@@ -100,9 +101,9 @@ public class ProcessingTest extends PApplet {
         }
     }
 
-    void drawParticles() {
+    void drawParticles(ODEModeler modeler) {
         noStroke();
-        for (Particle particle : odeModeler.particles) {
+        for (Particle particle : modeler.particles) {
             fill(particle.r, particle.g, particle.b);
             for (Point2D historicalPosition : particle.positionHistory) {
                 circle((float) historicalPosition.getX(), (float) historicalPosition.getY(), particleSize);
@@ -157,11 +158,11 @@ public class ProcessingTest extends PApplet {
         updateRandomOdeModeler();
     }
 
-    private void drawIntegralCurves() {
-        for (IntegralCurve curve : odeModeler.integralCurves) {
+    private void drawIntegralCurves(ODEModeler modeler) {
+        for (IntegralCurve curve : modeler.integralCurves) {
             for (Point2D point : curve.points) {
-                stroke(curve.r, curve.b, curve.g);
-                fill(curve.r, curve.b, curve.g);
+                stroke(curve.r, curve.b, curve.g, 100);
+                fill(curve.r, curve.b, curve.g, 100);
                 //point((float)point.getX(), (float)point.getY());
                 circle((float) point.getX(), (float) point.getY(), particleSize);
                 noStroke();
@@ -222,7 +223,9 @@ public class ProcessingTest extends PApplet {
 
     void updateRandomOdeModeler() {
         particleSize = (float)(scaleSize * particleSizeScaler);
-        odeModeler = new ODEModeler(new LinearCoefficientsODE(coeffs, scaleSize), incrementDenominator, particleSize, integralCurveCount);
+        LinearCoefficientsODE baseODE = new LinearCoefficientsODE(coeffs, scaleSize);
+        odeModeler = new ODEModeler(baseODE, incrementDenominator, particleSize, integralCurveCount);
+        orthogonalODEModeler = new ODEModeler(baseODE.getOrthogonalODE(), incrementDenominator, particleSize, integralCurveCount);
         scaleSize = (float)odeModeler.getScaleSize();
         particleSize = (float)odeModeler.particleSize;
         pixelSize = scaleSize * 0.002f; //(1.0f / boxSize) * scaleSize * 2;
@@ -253,7 +256,10 @@ public class ProcessingTest extends PApplet {
         translate(scaleSize, -(scaleSize));
         drawGuides();
         odeModeler.update();
-        drawParticles();
-        drawIntegralCurves();
+        orthogonalODEModeler.update();
+        drawParticles(odeModeler);
+        drawParticles(orthogonalODEModeler);
+        drawIntegralCurves(odeModeler);
+        drawIntegralCurves(orthogonalODEModeler);
     }
 }

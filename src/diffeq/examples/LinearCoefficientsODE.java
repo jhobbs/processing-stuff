@@ -21,6 +21,14 @@ public class LinearCoefficientsODE extends BaseFirstOrderODE {
                 a1, b1, c1, a2, b2, c2, scaleSize, scaleSize);
     }
 
+    public LinearCoefficientsODE getOrthogonalODE() {
+        int[] orthogonalCoeffs = {
+                -a2, -b2, -c2, a1, b1, c1
+        };
+
+        return new LinearCoefficientsODE(orthogonalCoeffs, getScaleSize());
+    }
+
     @Override
     public double dx_over_dt(double x, double y) {
         return (a2 * x + b2 * y + c2);
